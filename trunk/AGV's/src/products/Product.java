@@ -3,6 +3,7 @@ package products;
 import java.util.LinkedList;
 
 import jade.core.Agent;
+import jade.lang.acl.*;;
 
 public class Product extends Agent {
 
@@ -18,6 +19,8 @@ public class Product extends Agent {
 	protected void setup() {
 		// TODO Auto-generated method stub
 		super.setup();
+		ACLMessage m = new ACLMessage();
+		m.setPerformative(ACLMessage.)
 	}
 
 	public double getCurrentWeight() {
