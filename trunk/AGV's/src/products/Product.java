@@ -4,10 +4,8 @@ import java.util.LinkedList;
 
 public class Product{
 
-	
 	private double currentWeight;
 	private LinkedList<Operation> operations;
-
 	
 	public double getCurrentWeight() {
 		return currentWeight;
@@ -34,4 +32,12 @@ public class Product{
 		return getCurrentOperation();
 	}
 
+	public boolean isComplete(){
+		if(getCurrentOperation() == null){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
 }

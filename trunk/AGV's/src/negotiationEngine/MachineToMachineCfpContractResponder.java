@@ -1,6 +1,5 @@
 package negotiationEngine;
 
-import jade.core.Agent;
 import jade.domain.FIPAAgentManagement.FailureException;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;
 import jade.domain.FIPAAgentManagement.RefuseException;
@@ -15,10 +14,10 @@ public class MachineToMachineCfpContractResponder extends ContractNetResponder{
 	
 	private Machine agent;
 	
-	public MachineToMachineCfpContractResponder(Agent a, MessageTemplate mt) {
+	public MachineToMachineCfpContractResponder(Machine a, MessageTemplate mt) {
 		super(a, mt);
 		// TODO Auto-generated constructor stub
-		agent = (Machine) myAgent;
+		this.agent = a;
 	}
 
 	@Override

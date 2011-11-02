@@ -31,7 +31,7 @@ public class AGV extends Agent {
 		MessageTemplate template = MessageTemplate.and(
 				MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
 				MessageTemplate.MatchPerformative(ACLMessage.CFP) );
-		addBehaviour(new MachineToMachineCfpContractResponder(this, template));
+//		addBehaviour(new MachineToMachineCfpContractResponder(this, template));
 	}
 	
 	private void registerDfService(String serviceName, String serviceType){
