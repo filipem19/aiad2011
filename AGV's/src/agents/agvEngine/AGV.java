@@ -1,6 +1,5 @@
-package agents;
+package agents.agvEngine;
 
-import negotiationEngine.MachineToMachineCfpContractResponder;
 import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
@@ -12,6 +11,9 @@ import jade.lang.acl.MessageTemplate;
 
 public class AGV extends Agent {
 	
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 883196735452338183L;
 	
 	private int autonomy;
@@ -26,20 +28,11 @@ public class AGV extends Agent {
 	@Override
 	protected void setup() {
 		
-		registerDfService("serviço de AGV", "Transport");
-		
-		MessageTemplate template = MessageTemplate.and(
-				MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
-				MessageTemplate.MatchPerformative(ACLMessage.CFP) );
-		addBehaviour(new MachineToMachineCfpContractResponder(this, template));
-	}
-	
-	private void registerDfService(String serviceName, String serviceType){
 		DFAgentDescription dfd = new DFAgentDescription();
 		dfd.setName(getAID());
 		ServiceDescription service = new ServiceDescription();
-		service.setName(serviceName);
-		service.setType(serviceType);
+		service.setName("servico de AGV");
+		service.setType("Transport");
 		dfd.addServices(service);
 		try {
 			DFService.register(this, dfd);
@@ -47,6 +40,12 @@ public class AGV extends Agent {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		MessageTemplate template = MessageTemplate.and(
+				MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
+				MessageTemplate.MatchPerformative(ACLMessage.CFP) );
+
+		addBehaviour(new CfpAgvContractResponder(this, template));
 	}
 	
 	/**

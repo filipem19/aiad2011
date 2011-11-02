@@ -1,14 +1,26 @@
-package products;
+package productEngine.product;
+
+import jade.core.Agent;
 
 import java.util.LinkedList;
 
-public class Product{
 
-	
+public class Product extends Agent {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -858911517993953638L;
+
 	private double currentWeight;
 	private LinkedList<Operation> operations;
 
-	
+	@Override
+	protected void setup() {
+		// TODO Auto-generated method stub
+		super.setup();
+	}
+
 	public double getCurrentWeight() {
 		return currentWeight;
 	}
@@ -23,10 +35,7 @@ public class Product{
 		return operations.element();
 	}
 	
-	/**
-	 * Removes the completed operation and continue to the next operation 
-	 * @return the operation to be realized at the product
-	 */
+	//removes the completed operation and continue to the next operation 
 	public Operation nextOperation(){
 		if(operations.isEmpty())
 			return null;
