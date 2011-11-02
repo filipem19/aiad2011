@@ -121,6 +121,10 @@ public class Machine extends Agent {
 		return availableOperations.contains(oper);
 	}
 
+	/**
+	 * 
+	 * @return Enumeration with machine operations available 
+	 */
 	public Enumeration<Operation> getAvailableOperations() {
 		return availableOperations.elements();
 	}
@@ -153,18 +157,27 @@ public class Machine extends Agent {
 		return productAtWork;
 	}
 
+	/**
+	 * Set the product to be processed at the machine 
+	 * @param productAtWork
+	 */
 	public void setProductAtWork(Product productAtWork) {
 		if(this.productAtWork == null)
 			addBehaviour(new ProcessProductBehaviour(productAtWork));
 		this.productAtWork = productAtWork;
 	}
-
+	
 	/**
 	 * This method does the handles product that cannot longer be processed at this machine
 	 * or is already finnished
 	 */
-	public void dispachProduct() {
-		//TODO product negotiantion
+	private void dispachProduct() {
+		if(productAtWork.isComplete()){
+			//TODO Piece finnished
+		}
+		else{
+			//TODO negotiation with another machine
+		}
 		this.productAtWork = null;
 	}
 
