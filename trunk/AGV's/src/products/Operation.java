@@ -1,6 +1,5 @@
 package products;
 
-
 public class Operation  {
 
 	private String operationName;
