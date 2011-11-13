@@ -1,9 +1,5 @@
 package systemManagement;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -11,8 +7,8 @@ import javax.swing.JFrame;
 
 import products.Operation;
 import products.Product;
+import agents.machineEngine.Machine;
 
-import agents.Machine;
 
 public class SystemManagerGUI extends JFrame{
 
@@ -24,9 +20,7 @@ public class SystemManagerGUI extends JFrame{
 	private Vector<Machine> machines;
 	private Vector<Product> products;
 	private Vector<Operation> operations;
-	
-	public enum ObjectType{Machine, Operation, Product};
-	
+	private SystemManager sysManager;
 	public SystemManagerGUI() {
 		//initializeWindowPreferences();
 	}

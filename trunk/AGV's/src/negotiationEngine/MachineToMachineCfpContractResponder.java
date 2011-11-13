@@ -7,7 +7,7 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import jade.proto.ContractNetResponder;
-import agents.Machine;
+import agents.machineEngine.Machine;
 
 public class MachineToMachineCfpContractResponder extends ContractNetResponder{
 	private static final long serialVersionUID = 3560413304270027206L;
@@ -16,7 +16,7 @@ public class MachineToMachineCfpContractResponder extends ContractNetResponder{
 	
 	public MachineToMachineCfpContractResponder(Machine a, MessageTemplate mt) {
 		super(a, mt);
-		// TODO Auto-generated constructor stub
+		//TODO Auto-generated constructor stub
 		this.agent = a;
 	}
 

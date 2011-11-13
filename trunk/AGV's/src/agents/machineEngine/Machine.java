@@ -1,101 +1,96 @@
 package agents.machineEngine;
 
 import jade.core.Agent;
-import jade.core.behaviours.TickerBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPANames;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
 
 import java.util.Enumeration;
 import java.util.Vector;
 
-import productEngine.product.Operation;
-import productEngine.product.Product;
+import negotiationEngine.MachineToMachineCfpContractResponder;
+import products.Operation;
+import products.Product;
 
 public class Machine extends Agent {
-	
+
 	private static final long serialVersionUID = -1033896316722663016L;
-	
+
+	/* Agent properties */
 	private int locationX;
 	private int locationY;
 	private String machineName;
 	private Product productAtWork;
-	private Vector<Operation> availableOperations; //Contains all the operations that this machine is able to perform
-	private DFAgentDescription[] agents = null;
-	
+	private Vector<Operation> availableOperations; // Contains all the
+													// operations that this
+													// machine is able to
+													// perform
+	/* ------ */
+
+	public Machine(int locationX, int locationY, String machineName,
+			Vector<Operation> availableOperations) {
+		this.locationX = locationX;
+		this.locationY = locationY;
+		this.machineName = machineName;
+		this.availableOperations = availableOperations;
+		System.out.println("\nCreated => " + toString());
+	}
+
 	@Override
 	protected void setup() {
-		// TODO Auto-generated method stub
-		super.setup();
-		Object[] args = getArguments();
-		System.out.println("args" + args);
-		if(args.length == 0){
-			//TODO falta parametros
-//			System.out.println("Empty parameters\nUsage: <location X> <location Y> <Machine Name> <Available operations>");
-		}
-		
-		/* Starts the contract protocol */
-		contractInitializer();
+		/* Starting FIPA contract Responder Protocols*/
+		machineToMachineContractResponder();		
 	}
-	
-	/* Set the defenitions to initialize the CFP Handler*/
-	private void contractInitializer() {
 
-		/* Behaviour to refresh the AGV list every 5 seconds */
-		addBehaviour(new TickerBehaviour(this, 5000) {
-			private static final long serialVersionUID = -4378833920060743348L;
-
-			@Override
-			protected void onTick() {
-				refreshAGVList();
-			}
-			
-		});
-		
-		ACLMessage message = new ACLMessage(ACLMessage.CFP);
-		for(DFAgentDescription a : agents){
-			message.addReceiver(a.getName());
-		}
-		
-		message.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
-		message.setContent("teste mensagem");
-		addBehaviour(new CfpMachineContractorInitiator(this, message));
-		
-	}
-	
 	/**
-	 * Search and refreshes the list of AGV's 
+	 * Initiates the ContractResponder to other machines CFP's (Call for proposal to process a product) 
 	 */
-	private void refreshAGVList() {
-		DFAgentDescription dfd = new DFAgentDescription();
-		ServiceDescription sd = new ServiceDescription();
-		sd.setType("Transport");
-		dfd.addServices(sd);
-		
-		try {
-			agents = DFService.search(this, dfd);
-		} catch (FIPAException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		System.out.println("agents with transport service:");
-		for(DFAgentDescription a : agents)
-			System.out.println("\t" + a.getName());
-		
-	}	
-	
+	private void machineToMachineContractResponder() {
+
+		MessageTemplate template = MessageTemplate.and(
+				MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
+				MessageTemplate.MatchPerformative(ACLMessage.CFP) );
+
+		addBehaviour(new MachineToMachineCfpContractResponder(this, template));
+
+	}
+
+	/**
+	 * Search and refreshes the list of AGV's
+	 */
+//	private DFAgentDescription[] getAGVList() {
+//		DFAgentDescription dfd = new DFAgentDescription();
+//		ServiceDescription sd = new ServiceDescription();
+//		sd.setType("Transport");
+//		dfd.addServices(sd);
+//		DFAgentDescription[] agents = null;
+//		try {
+//			agents = DFService.search(this, dfd);
+//		} catch (FIPAException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//
+//		System.out.println("agents with transport service:");
+//		for (DFAgentDescription a : agents)
+//			System.out.println("\t" + a.getName());
+//		
+//		return agents;
+//
+//	}
+
 	public boolean isOperationAvailable(Operation oper) {
 		return availableOperations.contains(oper);
 	}
-	
-	public Enumeration<Operation> getAvailableOperations(){
+
+	public Enumeration<Operation> getAvailableOperations() {
 		return availableOperations.elements();
 	}
-	
+
 	public int getLocationX() {
 		return locationX;
 	}
@@ -126,6 +121,13 @@ public class Machine extends Agent {
 
 	public void setProductAtWork(Product productAtWork) {
 		this.productAtWork = productAtWork;
+		addBehaviour(new ProcessProductBehaviour(this.productAtWork));
 	}
-	
+
+	@Override
+	public String toString() {
+		return "Machine (" + getMachineName() + "):\n\tlocationX = " + locationX
+				+ "\tlocationY = " + locationY + 
+				"\tavailableOperations = " + availableOperations;
+	}
 }

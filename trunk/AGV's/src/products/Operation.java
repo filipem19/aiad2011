@@ -1,23 +1,23 @@
 package products;
 
-import jade.core.Agent;
 
-public class Operation extends Agent {
+public class Operation  {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3499081043636301580L;
-
+	private String operationName;
 	private int operationDuration;
 	private double deltaWeight;
-	
-	@Override
-	protected void setup() {
-		// TODO Auto-generated method stub
-		super.setup();
-	}
 
+	public Operation(int operationDuration, double deltaWeight, String operationName) {
+		this.operationName = operationName;
+		this.operationDuration = operationDuration;
+		this.deltaWeight = deltaWeight;
+		System.out.println("\nCreated => " + toString());
+	}
+	
+	public String getOperationName(){
+		return this.operationName;
+	}
+	
 	public int getOperationDuration() {
 		return operationDuration;
 	}
@@ -32,5 +32,10 @@ public class Operation extends Agent {
 
 	public void setDeltaWeight(double deltaWeight) {
 		this.deltaWeight = deltaWeight;
+	}
+	
+	@Override
+	public String toString() {
+		return "Operation (" + operationName + "):\n\tduration = " + operationDuration + "\n\tdeltaweight = " + deltaWeight;
 	}
 }
