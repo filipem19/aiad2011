@@ -1,7 +1,7 @@
 package negotiationEngine;
 
 import products.Product;
-import agents.Machine;
+import agents.machineEngine.Machine;
 
 public class AgvCFP {
 

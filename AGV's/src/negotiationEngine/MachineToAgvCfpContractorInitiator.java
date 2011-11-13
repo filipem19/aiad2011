@@ -7,11 +7,11 @@ import jade.proto.ContractNetInitiator;
 import java.util.Enumeration;
 import java.util.Vector;
 
-public class AgvCfpContractorInitiator extends ContractNetInitiator{
+public class MachineToAgvCfpContractorInitiator extends ContractNetInitiator{
 
 	private static final long serialVersionUID = 4913533665490479921L;
 
-	public AgvCfpContractorInitiator(Agent a, ACLMessage cfp) {
+	public MachineToAgvCfpContractorInitiator(Agent a, ACLMessage cfp) {
 		super(a, cfp);
 	}
 

@@ -1,4 +1,4 @@
-package agents;
+package agents.machineEngine;
 
 import jade.core.behaviours.SimpleBehaviour;
 import products.Operation;

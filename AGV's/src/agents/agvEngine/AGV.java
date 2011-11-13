@@ -1,5 +1,6 @@
 package agents.agvEngine;
 
+import negotiationEngine.MachineToAgvCfpContractResponder;
 import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
@@ -23,16 +24,50 @@ public class AGV extends Agent {
 	private int velocity;
 	private double currentLoad;
 	private double maxLoad;
-	private String status;
+	private String status, agvName;
+	
+	public AGV(int autonomy, int cost, int locationX, int locationY, int velocity, double maxLoad, String status, String agvName) {
+		this.autonomy = autonomy;
+		this.cost = cost;
+		this.locationX = locationX;
+		this.locationY = locationY;
+		this.velocity = velocity;
+		this.currentLoad = 0;
+		this.maxLoad = maxLoad;
+		this.status = status;
+		this.agvName = agvName;
+		System.out.println("\nCreated => " + toString());
+	}
 	
 	@Override
 	protected void setup() {
+		registerAgentAtDF("Nome do serviço","Tipo de serviço - transporte");
+		initializeAgvContractResponder();
+	}
+
+	/**
+	 * initializes contract responder for product transport proposals from machines
+	 */
+	private void initializeAgvContractResponder(){
+		MessageTemplate template = MessageTemplate.and(
+				MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
+				MessageTemplate.MatchPerformative(ACLMessage.CFP) );
+
+		addBehaviour(new MachineToAgvCfpContractResponder(this, template));
 		
+	}
+	
+	/**
+	 * Register a service with the given parameters at DF agent
+	 * @param serviceName
+	 * @param serviceType
+	 */
+	private void registerAgentAtDF(String serviceName, String serviceType) {
 		DFAgentDescription dfd = new DFAgentDescription();
 		dfd.setName(getAID());
 		ServiceDescription service = new ServiceDescription();
-		service.setName("servico de AGV");
-		service.setType("Transport");
+		service.setName(serviceName);
+		service.setType(serviceType);
 		dfd.addServices(service);
 		try {
 			DFService.register(this, dfd);
@@ -41,12 +76,8 @@ public class AGV extends Agent {
 			e.printStackTrace();
 		}
 		
-		MessageTemplate template = MessageTemplate.and(
-				MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
-				MessageTemplate.MatchPerformative(ACLMessage.CFP) );
-
-		addBehaviour(new CfpAgvContractResponder(this, template));
 	}
+
 	
 	/**
 	 * This method will deregister the previous services that have been registered in DFService
@@ -125,6 +156,18 @@ public class AGV extends Agent {
 		this.status = status;
 	}
 	
-	
-	
+	public String getAgvName(){
+		return this.agvName;
+	}
+
+	@Override
+	public String toString() {
+		return "AGV (" + getAgvName()  + "): \n\tautonomy = " + autonomy + 
+				"\tcost = " + cost +
+				"\tlocationX = " + locationX + 
+				"\tlocationY = " + locationY +
+				"\tvelocity = " + velocity +
+				"\tmaxLoad = " + maxLoad + 
+				"\tstatus = " + status;
+	}
 }
