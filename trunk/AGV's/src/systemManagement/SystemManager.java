@@ -38,6 +38,13 @@ public class SystemManager extends GuiAgent {
 	@Override
 	protected void setup() {
 		loadProgramData("ProgramData");
+		
+		registerExistingAgents();
+//		myGui = new SystemManagerGUI(this);
+	}
+
+	protected void registerExistingAgents() {
+		//agent registration
 		for(Machine m : existingMachines.values()){
 			try {
 				getContainerController().acceptNewAgent(m.getMachineName(), m);
@@ -45,14 +52,23 @@ public class SystemManager extends GuiAgent {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
+			m.initializeAgent();
 		}
-		myGui = new SystemManagerGUI();
+		
+		for(AGV a : existingAgvs.values()){
+			try {
+				getContainerController().acceptNewAgent(a.getAgvName(), a);
+			} catch (StaleProxyException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
 	 * Load data from file and creates instances of objects specified in this
 	 * file
-	 * 
 	 * @param filename
 	 */
 	private void loadProgramData(String filename) {
@@ -95,14 +111,6 @@ public class SystemManager extends GuiAgent {
 		return objectType;
 	}
 
-//	private void printArray(String[] properties){
-//		System.out.println("\nPrintArray: propertiesLenght" + properties.length);
-//		for(int i  = 0 ; i< properties.length; i++){
-//			System.out.println("\tproperties[" + i + "] = " + properties[i]);
-//		}
-//		System.out.println();
-//	}
-	
 	private void createObject(String objectName, String[] properties, ObjectType objectType) {
 		// TODO Auto-generated method stub
 		switch (objectType) {
@@ -225,6 +233,16 @@ public class SystemManager extends GuiAgent {
 			availableOperations.add(existingOperations.get(properties[i]));
 			i++;
 		}
+		
+		
+//		AgentController ac = null;
+//		
+//		try {
+//			ac = getContainerController().createNewAgent(machineName, "agents.machineEngine.Machine", null);
+//		} catch (StaleProxyException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
 		return new Machine(locationX, locationY, machineName,
 				availableOperations);

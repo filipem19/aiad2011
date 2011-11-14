@@ -1,6 +1,5 @@
 package agents.agvEngine;
 
-import negotiationEngine.MachineToAgvCfpContractResponder;
 import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
@@ -9,6 +8,7 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import negotiationEngine.MachineToAgvCfpContractResponder;
 
 public class AGV extends Agent {
 	
@@ -41,7 +41,7 @@ public class AGV extends Agent {
 	
 	@Override
 	protected void setup() {
-		registerAgentAtDF("Nome do serviço","Tipo de serviço - transporte");
+		registerAgentAtDF("Transport:" + getAgvName(),"Transport");
 		initializeAgvContractResponder();
 	}
 
@@ -75,7 +75,6 @@ public class AGV extends Agent {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 	}
 
 	
