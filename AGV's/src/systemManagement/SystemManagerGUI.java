@@ -1,5 +1,7 @@
 package systemManagement;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -10,7 +12,7 @@ import products.Product;
 import agents.machineEngine.Machine;
 
 
-public class SystemManagerGUI extends JFrame{
+public class SystemManagerGUI extends JFrame implements ActionListener{
 
 	/**
 	 * 
@@ -21,8 +23,10 @@ public class SystemManagerGUI extends JFrame{
 	private Vector<Product> products;
 	private Vector<Operation> operations;
 	private SystemManager sysManager;
-	public SystemManagerGUI() {
-		//initializeWindowPreferences();
+	
+	public SystemManagerGUI(SystemManager sysManager) {
+		this.sysManager = sysManager;
+		initializeWindowPreferences();
 	}
 	
 
@@ -33,6 +37,13 @@ public class SystemManagerGUI extends JFrame{
 		setSize(200, 200);
 		setLocation(200, 400);
 		JButton button = new JButton("Adicionar uma cena");
+		button.addActionListener(this);
 		add(button);
+	}
+
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+//		sysManager.registerExistingAgents(get);
 	}
 }
