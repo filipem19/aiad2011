@@ -1,9 +1,15 @@
 package products;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 
-public class Product{
+public class Product implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4934668319850858658L;
+	
 	private String productName;
 	private double currentWeight;
 	private LinkedList<Operation> operations;
@@ -12,7 +18,7 @@ public class Product{
 		this.productName = productName;
 		this.currentWeight = currentWeight;
 		this.operations = operations;
-		System.out.println("\nCreated => " + toString());
+//		System.out.println("\nCreated => " + toString());
 	}
 	
 	public double getCurrentWeight() {

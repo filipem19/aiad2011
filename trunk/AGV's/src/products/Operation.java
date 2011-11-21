@@ -1,28 +1,36 @@
 package products;
 
-public class Operation  {
+import java.io.Serializable;
 
-	private String operationName;
-	private int operationDuration;
+public class Operation implements Serializable {
+
+	
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6249120443607970589L;
+	private String name;
+	private int duration;
 	private double deltaWeight;
 
 	public Operation(int operationDuration, double deltaWeight, String operationName) {
-		this.operationName = operationName;
-		this.operationDuration = operationDuration;
+		this.name = operationName;
+		this.duration = operationDuration;
 		this.deltaWeight = deltaWeight;
-		System.out.println("\nCreated => " + toString());
+//		System.out.println("\nCreated => " + toString());
 	}
 	
 	public String getOperationName(){
-		return this.operationName;
+		return this.name;
 	}
 	
 	public int getOperationDuration() {
-		return operationDuration;
+		return duration;
 	}
 
 	public void setOperationDuration(int operationDuration) {
-		this.operationDuration = operationDuration;
+		this.duration = operationDuration;
 	}
 
 	public double getDeltaWeight() {
@@ -35,6 +43,6 @@ public class Operation  {
 	
 	@Override
 	public String toString() {
-		return "Operation (" + operationName + "):\n\tduration = " + operationDuration + "\n\tdeltaweight = " + deltaWeight;
+		return "Operation (" + name + "):\n\tduration = " + duration + "\n\tdeltaweight = " + deltaWeight;
 	}
 }

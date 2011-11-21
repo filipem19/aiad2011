@@ -9,6 +9,8 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import jade.lang.acl.UnreadableException;
+import jade.wrapper.ControllerException;
 
 import java.util.Enumeration;
 import java.util.Vector;
@@ -21,7 +23,6 @@ public class Machine extends Agent {
 
 	private static final long serialVersionUID = -1033896316722663016L;
 
-	
 	/* Agent properties */
 	private int locationX;
 	private int locationY;
@@ -34,50 +35,74 @@ public class Machine extends Agent {
 
 	/* ------ */
 
-	public Machine(int locationX, int locationY, String machineName,
-			Vector<Operation> availableOperations) {
+	@Override
+	protected void setup() {
+		Object[] args = getArguments();
+		if(args.length < 3){
+			System.out.println("takedown");
+			takeDown();
+		}
+		else{
+			setMachineProperties((Integer) args[0], (Integer) args[1],this.getName(), (Vector) args[2]);
+			initializeAgent();
+			try {
+				getContainerController().start();
+			} catch (ControllerException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+//			System.out.println(toString());
+		}
+	}
+
+	public void setMachineProperties(int locationX, int locationY,
+			String machineName, Vector<Operation> availableOperations) {
 		this.locationX = locationX;
 		this.locationY = locationY;
 		this.machineName = machineName;
 		this.availableOperations = availableOperations;
-		System.out.println("\nCreated => " + toString());
+//		System.out.println("\nCreated => " + toString());
 	}
-
-	@Override
-	protected void setup() {
-		super.setup();
-	}
-
-	public void initializeAgent(){
-		setup();
-		System.out.println("intializing agent: " + getMachineName());
-		
+	
+	public void initializeAgent() {
+		testFunction();
 		registerAgentAtDF("ProcessProduct:" + getMachineName(),
 				"ProcessProduct");
-		/* Starting FIPA contract Responder Protocols */
-//		machineToMachineContractResponder();
-		addBehaviour(new CyclicBehaviour(this) 
-        {
-             /**
-			 * 
-			 */
-			private static final long serialVersionUID = -8611591964691930759L;
 
-			public void action() 
-             {
-				System.out.println("behaviour");
-                ACLMessage msg= receive();
-                if (msg!=null)
-                    System.out.println( " - " +
-                       myAgent.getLocalName() + " <- " +
-                       msg.getContent() );
-                System.out.println("block");
-                block();
-             }
-        });
+		/* Starting FIPA contract Responder Protocols */
+		machineToMachineContractResponder();
+		
+		
 	}
-	/* test for contract behaviour */
-	/*-----------*/
+
+	private void testFunction() {
+		/* test for contract behaviour */
+		addBehaviour(new CyclicBehaviour(this) {
+		
+			public void action() {
+				ACLMessage msg = receive(MessageTemplate.MatchPerformative(ACLMessage.INFORM));
+				if (msg != null){
+					System.out.println("Message received - " + myAgent.getLocalName() + " <- "
+							+ msg.getContent() + "\t" + msg);
+					Product p = null;
+					try {
+						p = (Product) msg.getContentObject();
+						System.out.println("messageObjectContent() = " + msg.getContentObject());
+					} catch (UnreadableException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					if(p != null){
+						setProductAtWork(p);
+					}
+					
+				}
+				block();
+			}
+		});
+		/*-----------*/
+
+	}
 
 	/**
 	 * Register Machine agent on DF with given parameters
@@ -116,26 +141,7 @@ public class Machine extends Agent {
 	/**
 	 * Search and refreshes the list of AGV's
 	 */
-	private DFAgentDescription[] getAGVList(String serviceName) {
-		DFAgentDescription dfd = new DFAgentDescription();
-		ServiceDescription sd = new ServiceDescription();
-		sd.setType("Transport");
-		dfd.addServices(sd);
-		DFAgentDescription[] agents = null;
-		try {
-			agents = DFService.search(this, dfd);
-		} catch (FIPAException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		System.out.println("agents with transport service:");
-		for (DFAgentDescription a : agents)
-			System.out.println("\t" + a.getName());
-
-		return agents;
-	}
-
+	
 	public boolean isOperationAvailable(Operation oper) {
 		return availableOperations.contains(oper);
 	}
@@ -173,8 +179,10 @@ public class Machine extends Agent {
 	}
 
 	public void setProductAtWork(Product productAtWork) {
+		System.out.println("setProductAtWork:" + productAtWork);
 		this.productAtWork = productAtWork;
-		addBehaviour(new ProcessProductBehaviour(this.productAtWork));
+		ProcessProductBehaviour processBehaviour =new ProcessProductBehaviour(this.productAtWork); 
+		addBehaviour(processBehaviour);
 	}
 
 	@Override

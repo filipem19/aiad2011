@@ -35,6 +35,14 @@ public class MachineToMachineCfpContractResponder extends ContractNetResponder{
 		return reply;
 	}
 
+	@Override
+	protected ACLMessage handleAcceptProposal(ACLMessage cfp,
+			ACLMessage propose, ACLMessage accept) throws FailureException {
+		// TODO Auto-generated method stub
+		return super.handleAcceptProposal(cfp, propose, accept);
+	}
+	
+	
 	private ACLMessage decodeMessage(ACLMessage cfp) throws UnreadableException {
 		ACLMessage reply = null;
 		
