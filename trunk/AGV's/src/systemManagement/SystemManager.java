@@ -58,11 +58,13 @@ public class SystemManager extends GuiAgent {
 						.MatchPerformative(ACLMessage.INFORM));
 				if (msg != null) {
 					// mensagem com nome do agente a receber o produto e o produto
-					System.out.println("content: " + msg.getContent());
+					System.out.println(getLocalName() + ": content: " + msg.getContent());
 					String[] parts = msg.getContent().split(" ");
 					if (parts.length == 2) {
 						DFAgentDescription[] agents = getAgentListWithService("ProcessProduct");
+						
 						ACLMessage msgtomachine = new ACLMessage(ACLMessage.INFORM);
+						
 						for (DFAgentDescription agent : agents){
 							if (agent.getName().getLocalName().compareTo(parts[0]) == 0){
 								msgtomachine.addReceiver(agent.getName());
@@ -70,8 +72,7 @@ public class SystemManager extends GuiAgent {
 						}
 						try {
 							Product p = existingProducts.get(parts[1]);
-							
-							msg.setContentObject(p);
+							msgtomachine.setContentObject(p);
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							System.err.println("ERROR - adding product to msg content");
@@ -79,7 +80,7 @@ public class SystemManager extends GuiAgent {
 						}
 						
 						try {
-							System.out.println("sending message: " + msgtomachine + " message contentObject: " + msg.getContentObject());
+							System.out.println(getLocalName() + ": teste sending message: " + msgtomachine + " message contentObject: " + msgtomachine.getContentObject());
 						} catch (UnreadableException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
