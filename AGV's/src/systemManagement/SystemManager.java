@@ -57,16 +57,20 @@ public class SystemManager extends GuiAgent {
 				ACLMessage msg = receive(MessageTemplate
 						.MatchPerformative(ACLMessage.INFORM));
 				if (msg != null) {
-					// mensagem com nome do agente a receber o produto e o produto
-					System.out.println(getLocalName() + ": content: " + msg.getContent());
+					// mensagem com nome do agente a receber o produto e o
+					// produto
+					System.out.println(getLocalName() + ": content: "
+							+ msg.getContent());
 					String[] parts = msg.getContent().split(" ");
 					if (parts.length == 2) {
 						DFAgentDescription[] agents = getAgentListWithService("ProcessProduct");
-						
-						ACLMessage msgtomachine = new ACLMessage(ACLMessage.INFORM);
-						
-						for (DFAgentDescription agent : agents){
-							if (agent.getName().getLocalName().compareTo(parts[0]) == 0){
+
+						ACLMessage msgtomachine = new ACLMessage(
+								ACLMessage.INFORM);
+
+						for (DFAgentDescription agent : agents) {
+							if (agent.getName().getLocalName()
+									.compareTo(parts[0]) == 0) {
 								msgtomachine.addReceiver(agent.getName());
 							}
 						}
@@ -75,17 +79,21 @@ public class SystemManager extends GuiAgent {
 							msgtomachine.setContentObject(p);
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
-							System.err.println("ERROR - adding product to msg content");
+							System.err
+									.println("ERROR - adding product to msg content");
 							e.printStackTrace();
 						}
-						
+
 						try {
-							System.out.println(getLocalName() + ": teste sending message: " + msgtomachine + " message contentObject: " + msgtomachine.getContentObject());
+							System.out.println(getLocalName()
+									+ ": teste sending message: "
+									+ msgtomachine + " message contentObject: "
+									+ msgtomachine.getContentObject());
 						} catch (UnreadableException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-						
+
 						send(msgtomachine);
 					}
 				}
@@ -180,7 +188,7 @@ public class SystemManager extends GuiAgent {
 
 	private void createAgvWithProperties(String agvName, String[] properties) {
 		if (properties.length == 7) {
-//			System.out.println("creating agv");
+			// System.out.println("creating agv");
 			int autonomy = Integer.parseInt(properties[0]), cost = Integer
 					.parseInt(properties[1]), locationX = Integer
 					.parseInt(properties[2]), locationY = Integer
@@ -244,7 +252,7 @@ public class SystemManager extends GuiAgent {
 
 	private void createMachineWithProperties(String machineName,
 			String[] properties) {
-		
+
 		if (properties.length >= 2) {
 
 			int locationX = Integer.parseInt(properties[0]), locationY = Integer
@@ -314,11 +322,37 @@ public class SystemManager extends GuiAgent {
 			e.printStackTrace();
 		}
 
-//		System.out.println("agents with " + serviceName + "service:");
-//		for (DFAgentDescription a : agents)
-//			System.out.println("\t" + a.getName());
+		// System.out.println("agents with " + serviceName + "service:");
+		// for (DFAgentDescription a : agents)
+		// System.out.println("\t" + a.getName());
 
 		return agents;
+	}
+
+	public void removeAgv(String agvName) {
+		//TODO 
+	}
+
+	public void removeMachine(String machineName) {
+		//TODO 
+	}
+
+	/**
+	 * 
+	 * @param agvName
+	 * @param params [autonomy cost locationX locationY velocity maxLoad status]
+	 */
+	public void addAgv(String agvName, String[] params) {
+		createAgvWithProperties(agvName, params);
+	}
+
+	/**
+	 * 
+	 * @param machineName
+	 * @param params [locationX locationY [availableOperations]*]
+	 */
+	public void addMachine(String machineName, String[] params) {
+		createMachineWithProperties(machineName, params);
 	}
 
 	public HashMap<String, Operation> getExistingOperations() {
