@@ -18,17 +18,23 @@ public class ProcessProductBehaviour extends SimpleBehaviour{
 	public ProcessProductBehaviour(Product product) {
 		this.product = product;
 		this.machine = (Machine) myAgent;
+		action();
 	}
 	
 	@Override
 	public void action() {
+		System.out.println("action process product behaviour");
 		Operation op = product.getCurrentOperation(); 
+		
 		while(machine.isOperationAvailable(product.getCurrentOperation())){
 			block(op.getOperationDuration());
 			op = product.nextOperation();
+			//TODO delay for operation time and product modification
 		}
 		machine.setProductAtWork(product);
 		finnished = true;
+		
+		//M2MCFP
 	}
 
 	@Override

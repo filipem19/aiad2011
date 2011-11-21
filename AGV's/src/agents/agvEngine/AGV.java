@@ -11,12 +11,12 @@ import jade.lang.acl.MessageTemplate;
 import negotiationEngine.MachineToAgvCfpContractResponder;
 
 public class AGV extends Agent {
-	
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 883196735452338183L;
-	
+
 	private int autonomy;
 	private int cost;
 	private int locationX;
@@ -25,8 +25,10 @@ public class AGV extends Agent {
 	private double currentLoad;
 	private double maxLoad;
 	private String status, agvName;
-	
-	public AGV(int autonomy, int cost, int locationX, int locationY, int velocity, double maxLoad, String status, String agvName) {
+
+	public void setAgvProperties(int autonomy, int cost, int locationX,
+			int locationY, int velocity, double maxLoad, String status,
+			String agvName) {
 		this.autonomy = autonomy;
 		this.cost = cost;
 		this.locationX = locationX;
@@ -36,29 +38,45 @@ public class AGV extends Agent {
 		this.maxLoad = maxLoad;
 		this.status = status;
 		this.agvName = agvName;
-		System.out.println("\nCreated => " + toString());
+		// System.out.println("\nCreated => " + toString());
 	}
-	
+
 	@Override
 	protected void setup() {
-		registerAgentAtDF("Transport:" + getAgvName(),"Transport");
-		initializeAgvContractResponder();
+		Object[] args = getArguments();
+
+		if (args.length < 8) {
+			System.out.println("takedown agent: " + getAgvName());
+			this.takeDown();
+		} else {
+			setAgvProperties((Integer) args[0], (Integer) args[1],
+					(Integer) args[2], (Integer) args[3], (Integer) args[4],
+					(Double) args[5], (String) args[6], (String) args[7]);
+
+			registerAgentAtDF("Transport:" + getAgvName(), "Transport");
+			initializeAgvContractResponder();
+//			System.out.println(toString());
+		}
+
 	}
 
 	/**
-	 * initializes contract responder for product transport proposals from machines
+	 * initializes contract responder for product transport proposals from
+	 * machines
 	 */
-	private void initializeAgvContractResponder(){
-		MessageTemplate template = MessageTemplate.and(
-				MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
-				MessageTemplate.MatchPerformative(ACLMessage.CFP) );
+	private void initializeAgvContractResponder() {
+		MessageTemplate template = MessageTemplate
+				.and(MessageTemplate
+						.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
+						MessageTemplate.MatchPerformative(ACLMessage.CFP));
 
 		addBehaviour(new MachineToAgvCfpContractResponder(this, template));
-		
+
 	}
-	
+
 	/**
 	 * Register a service with the given parameters at DF agent
+	 * 
 	 * @param serviceName
 	 * @param serviceType
 	 */
@@ -77,9 +95,9 @@ public class AGV extends Agent {
 		}
 	}
 
-	
 	/**
-	 * This method will deregister the previous services that have been registered in DFService
+	 * This method will deregister the previous services that have been
+	 * registered in DFService
 	 */
 	@Override
 	protected void takeDown() {
@@ -154,19 +172,16 @@ public class AGV extends Agent {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
-	public String getAgvName(){
+
+	public String getAgvName() {
 		return this.agvName;
 	}
 
 	@Override
 	public String toString() {
-		return "AGV (" + getAgvName()  + "): \n\tautonomy = " + autonomy + 
-				"\tcost = " + cost +
-				"\tlocationX = " + locationX + 
-				"\tlocationY = " + locationY +
-				"\tvelocity = " + velocity +
-				"\tmaxLoad = " + maxLoad + 
-				"\tstatus = " + status;
+		return "AGV (" + getAgvName() + "): \n\tautonomy = " + autonomy
+				+ "\tcost = " + cost + "\tlocationX = " + locationX
+				+ "\tlocationY = " + locationY + "\tvelocity = " + velocity
+				+ "\tmaxLoad = " + maxLoad + "\tstatus = " + status;
 	}
 }

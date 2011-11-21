@@ -1,25 +1,44 @@
 Operations
-//OperatioName : operationDuration deltaWeight
+//OperatioName:operationDuration deltaWeight
 op1:25 -10
-op2:5 -5
-op3:15 20
-op4:10 1
-op5:7 -3
-op6:3 -4
-op7:2 -6
-op8:42 -8
-op9:20 15
+op2:25 -10
+op3:5 -5
+op4:15 20
+op5:15 20
+op6:5 -5
+op7:15 20
+op8:15 20
+op9:5 -5
+op10:15 20
+op11:15 20
+op12:5 -5
+op13:15 20
+op14:15 20
 Products
 // ProductName:currentWeight operations
-p1:10 op3 op4 op6 op8
+p1:10 op3 op4 
 Agv
 // AgvName:autonomy cost locationX locationY velocity maxLoad status
 a1:10 2 1 1 20 200 Good
+a2:10 5 1 1 20 200 Good
+a3:10 2 1 1 20 200 Good
+a4:10 2 1 1 20 200 Good
+a5:10 2 1 1 20 200 Good
+a6:10 2 1 1 20 200 Good
+a7:10 2 1 1 20 200 Good
+a8:10 2 1 1 20 200 Good
+a9:10 2 1 1 20 200 Good
 Machines
 //machineName:locationX locationY availableOperations
-m1:1 2 op1 op3
-m2:1 2 op1 op3
-m3:1 2 op1 op3
-m4:1 2 op1 op3
-m5:1 2 op1 op3
-m6:1 2 op1 op3
+m1:1 1 op1 op2
+m2:1 2 op3 op4
+m3:2 1 op4 op6
+m4:2 2 op2 op5
+m5:3 1 op7 op8
+m6:3 2 op9
+m7:4 1 op10
+m8:4 2 op11
+m9:5 1 op12 op13
+m10:5 2 op14 op3
+m11:6 1 op11 op3
+m12:6 2 op12 op14

@@ -1,12 +1,22 @@
 package systemManagement;
 
+import jade.core.behaviours.CyclicBehaviour;
+import jade.domain.DFService;
+import jade.domain.FIPAException;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.gui.GuiAgent;
 import jade.gui.GuiEvent;
+import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
+import jade.lang.acl.UnreadableException;
+import jade.wrapper.AgentController;
 import jade.wrapper.StaleProxyException;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -14,8 +24,6 @@ import java.util.Vector;
 
 import products.Operation;
 import products.Product;
-import agents.agvEngine.AGV;
-import agents.machineEngine.Machine;
 
 public class SystemManager extends GuiAgent {
 
@@ -29,46 +37,66 @@ public class SystemManager extends GuiAgent {
 	};
 
 	private HashMap<String, Operation> existingOperations = new HashMap<String, Operation>();
-	private HashMap<String, Machine> existingMachines = new HashMap<String, Machine>();
 	private HashMap<String, Product> existingProducts = new HashMap<String, Product>();
-	private HashMap<String, AGV> existingAgvs = new HashMap<String, AGV>();
 
 	transient protected SystemManagerGUI myGui; // The gui
 
 	@Override
 	protected void setup() {
 		loadProgramData("ProgramData");
-		
-		registerExistingAgents();
-//		myGui = new SystemManagerGUI(this);
+		myGui = new SystemManagerGUI(this);
+		testFunctions();
 	}
 
-	protected void registerExistingAgents() {
-		//agent registration
-		for(Machine m : existingMachines.values()){
-			try {
-				getContainerController().acceptNewAgent(m.getMachineName(), m);
-			} catch (StaleProxyException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+	private void testFunctions() {
+		// Comportamento para adicionar por um produto numa maquina
+		addBehaviour(new CyclicBehaviour(this) {
+
+			@Override
+			public void action() {
+				ACLMessage msg = receive(MessageTemplate
+						.MatchPerformative(ACLMessage.INFORM));
+				if (msg != null) {
+					// mensagem com nome do agente a receber o produto e o produto
+					System.out.println("content: " + msg.getContent());
+					String[] parts = msg.getContent().split(" ");
+					if (parts.length == 2) {
+						DFAgentDescription[] agents = getAgentListWithService("ProcessProduct");
+						ACLMessage msgtomachine = new ACLMessage(ACLMessage.INFORM);
+						for (DFAgentDescription agent : agents){
+							if (agent.getName().getLocalName().compareTo(parts[0]) == 0){
+								msgtomachine.addReceiver(agent.getName());
+							}
+						}
+						try {
+							Product p = existingProducts.get(parts[1]);
+							
+							msg.setContentObject(p);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							System.err.println("ERROR - adding product to msg content");
+							e.printStackTrace();
+						}
+						
+						try {
+							System.out.println("sending message: " + msgtomachine + " message contentObject: " + msg.getContentObject());
+						} catch (UnreadableException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+						send(msgtomachine);
+					}
+				}
+				block();
 			}
-			
-			m.initializeAgent();
-		}
-		
-		for(AGV a : existingAgvs.values()){
-			try {
-				getContainerController().acceptNewAgent(a.getAgvName(), a);
-			} catch (StaleProxyException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+		});
 	}
 
 	/**
 	 * Load data from file and creates instances of objects specified in this
 	 * file
+	 * 
 	 * @param filename
 	 */
 	private void loadProgramData(String filename) {
@@ -79,19 +107,19 @@ public class SystemManager extends GuiAgent {
 			String strLine;
 			ObjectType objectType = null;
 			while ((strLine = br.readLine()) != null) {
-				if(strLine.startsWith("//") || strLine.startsWith("\n")){
-//					System.out.println("SKIP: " + strLine);
-				}
-				else{
+				if (strLine.startsWith("//") || strLine.startsWith("\n")) {
+					// System.out.println("SKIP: " + strLine);
+				} else {
 					// file decoding and object creation
-//					System.out.println("DECODE: " + strLine);
+					// System.out.println("DECODE: " + strLine);
 					objectType = decodeLine(strLine, objectType);
 				}
 			}
 			in.close();
 		} catch (Exception e) {
 			// TODO: handle exception
-			System.err.println("erro na leitura do ficheiro:" + filename + "\t" + e.getMessage());
+			System.err.println("erro na leitura do ficheiro:" + filename + "\t"
+					+ e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -111,18 +139,12 @@ public class SystemManager extends GuiAgent {
 		return objectType;
 	}
 
-	private void createObject(String objectName, String[] properties, ObjectType objectType) {
+	private void createObject(String objectName, String[] properties,
+			ObjectType objectType) {
 		// TODO Auto-generated method stub
 		switch (objectType) {
 		case Machine:
-			Machine m = createMachineWithProperties(objectName, properties);
-			if (m != null
-					&& !existingMachines.keySet().contains(m.getMachineName())) {
-				existingMachines.put(m.getMachineName(), m);
-			}
-			else{
-				System.err.println("ERROR - Already existing machine (m = " + m + ")");
-			}
+			createMachineWithProperties(objectName, properties);
 			break;
 		case Product:
 			// read details and create product
@@ -130,65 +152,72 @@ public class SystemManager extends GuiAgent {
 			if (p != null
 					&& !existingProducts.keySet().contains(p.getProductName())) {
 				existingProducts.put(p.getProductName(), p);
-			}
-			else{
-				System.err.println("ERROR - Already existing product (p = " + p + ")");
+			} else {
+				System.err.println("ERROR - Already existing product (p = " + p
+						+ ")");
 			}
 			break;
 		case Operation:
 			// read details and create Operation
 			Operation o = createOperationWithProperties(objectName, properties);
-			if(o != null && !existingOperations.containsKey(o.getOperationName())){
+			if (o != null
+					&& !existingOperations.containsKey(o.getOperationName())) {
 				existingOperations.put(o.getOperationName(), o);
-			}
-			else{
-				System.err.println("ERROR - Already existing operation (o = " + o + ")");
+			} else {
+				System.err.println("ERROR - Already existing operation (o = "
+						+ o + ")");
 			}
 			break;
 		case Agv:
 			// read details and create AGV
-			AGV a = createAgvWithProperties(objectName, properties);
-			if(a != null && !existingAgvs.containsKey(a.getAgvName())){
-				existingAgvs.put(a.getName(), a);
-			}
-			else{
-				System.err.println("ERROR - Already existing AGV (a = " + a + ")");
-			}
+			createAgvWithProperties(objectName, properties);
 			break;
 		default:
 			break;
 		}
 	}
 
-	private AGV createAgvWithProperties(String agvName, String[] properties) {
-		if (properties.length < 7)
-			return null;
+	private void createAgvWithProperties(String agvName, String[] properties) {
+		if (properties.length == 7) {
+//			System.out.println("creating agv");
+			int autonomy = Integer.parseInt(properties[0]), cost = Integer
+					.parseInt(properties[1]), locationX = Integer
+					.parseInt(properties[2]), locationY = Integer
+					.parseInt(properties[3]), velocity = Integer
+					.parseInt(properties[4]);
 
-		int autonomy = Integer.parseInt(properties[0]), cost = Integer
-				.parseInt(properties[1]), locationX = Integer
-				.parseInt(properties[2]), locationY = Integer
-				.parseInt(properties[3]), velocity = Integer
-				.parseInt(properties[4]);
+			double maxLoad = Double.parseDouble(properties[5]);
 
-		double maxLoad = Double.parseDouble(properties[5]);
+			String status = properties[6];
+			Object[] args = { autonomy, cost, locationX, locationY, velocity,
+					maxLoad, status, agvName };
 
-		String status = properties[6];
-
-		return new AGV(autonomy, cost, locationX, locationY, velocity, maxLoad,
-				status, agvName);
+			try {
+				AgentController ac = getContainerController().createNewAgent(
+						agvName, "agents.agvEngine.AGV", args);
+				ac.start();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			System.out.println("agv not created");
+		}
 	}
 
-	private Operation createOperationWithProperties(String operationName, String[] properties) {
+	private Operation createOperationWithProperties(String operationName,
+			String[] properties) {
 		if (properties.length != 2)
 			return null;
 
 		int operationDuration = Integer.parseInt(properties[0]);
 		double deltaWeight = Double.parseDouble(properties[1]);
-				
+
 		return new Operation(operationDuration, deltaWeight, operationName);
 	}
 
-	private Product createProductWithProperties(String productName, String[] properties) {
+	private Product createProductWithProperties(String productName,
+			String[] properties) {
 
 		if (properties.length < 2)
 			return null;
@@ -212,40 +241,43 @@ public class SystemManager extends GuiAgent {
 		return new Product(currentWeight, productName, operations);
 	}
 
-	private Machine createMachineWithProperties(String machineName, String[] properties) {
+	private void createMachineWithProperties(String machineName,
+			String[] properties) {
+		
+		if (properties.length >= 2) {
 
-		if (properties.length < 2)
-			return null;
+			int locationX = Integer.parseInt(properties[0]), locationY = Integer
+					.parseInt(properties[1]);
+			Vector<Operation> availableOperations = new Vector<Operation>();
+			int i = 2;
 
-		int locationX = Integer.parseInt(properties[0]), locationY = Integer
-				.parseInt(properties[1]);
-		Vector<Operation> availableOperations = new Vector<Operation>();
+			while (i < properties.length) {
+				// check if the operation exists
+				if (!existingOperations.containsKey(properties[i])) {
+					System.err.println("unexistent operation (" + properties[i]
+							+ ")");
+				} else {
+					availableOperations.add(existingOperations
+							.get(properties[i]));
+				}
 
-		int i = 2;
-
-		while (i < properties.length) {
-			// check if the operation exists
-			if (!existingOperations.containsKey(properties[i])) {
-				System.err.println("unexistent operation (" + properties[i]
-						+ ")");
-				return null;
+				i++;
 			}
-			availableOperations.add(existingOperations.get(properties[i]));
-			i++;
+			Object[] args = { locationX, locationY, availableOperations };
+
+			try {
+				AgentController ac = getContainerController().createNewAgent(
+						machineName, "agents.machineEngine.Machine", args);
+				ac.start();
+			} catch (StaleProxyException e) {
+				// TODO Auto-generated catch block
+				System.err.println("Error - problem creating agent ("
+						+ machineName + ")!");
+				e.printStackTrace();
+			}
+		} else {
+			System.out.println("error creating machine - bad parameters");
 		}
-		
-		
-//		AgentController ac = null;
-//		
-//		try {
-//			ac = getContainerController().createNewAgent(machineName, "agents.machineEngine.Machine", null);
-//		} catch (StaleProxyException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		
-		return new Machine(locationX, locationY, machineName,
-				availableOperations);
 	}
 
 	private ObjectType identifyObjectType(String string) {
@@ -266,6 +298,34 @@ public class SystemManager extends GuiAgent {
 			return ObjectType.Agv;
 
 		return null;
+	}
+
+	public DFAgentDescription[] getAgentListWithService(String serviceName) {
+		DFAgentDescription dfd = new DFAgentDescription();
+		ServiceDescription sd = new ServiceDescription();
+		sd.setType(serviceName);
+		dfd.addServices(sd);
+		DFAgentDescription[] agents = null;
+		try {
+			agents = DFService.search(this, dfd);
+		} catch (FIPAException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+//		System.out.println("agents with " + serviceName + "service:");
+//		for (DFAgentDescription a : agents)
+//			System.out.println("\t" + a.getName());
+
+		return agents;
+	}
+
+	public HashMap<String, Operation> getExistingOperations() {
+		return existingOperations;
+	}
+
+	public HashMap<String, Product> getExistingProducts() {
+		return existingProducts;
 	}
 
 	@Override
