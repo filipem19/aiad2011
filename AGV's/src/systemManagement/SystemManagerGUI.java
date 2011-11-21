@@ -87,7 +87,6 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 		c.add(botoes, BorderLayout.EAST);
 		c.add(mapaOficina, BorderLayout.WEST);  
 	    		
-		this.add(c);
 		//---   ---
 				
 	}
