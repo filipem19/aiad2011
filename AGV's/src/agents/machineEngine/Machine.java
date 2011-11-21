@@ -72,7 +72,6 @@ public class Machine extends Agent {
 		/* Starting FIPA contract Responder Protocols */
 		machineToMachineContractResponder();
 		
-		
 	}
 
 	private void testFunction() {
@@ -82,12 +81,10 @@ public class Machine extends Agent {
 			public void action() {
 				ACLMessage msg = receive(MessageTemplate.MatchPerformative(ACLMessage.INFORM));
 				if (msg != null){
-					System.out.println("Message received - " + myAgent.getLocalName() + " <- "
-							+ msg.getContent() + "\t" + msg);
 					Product p = null;
 					try {
 						p = (Product) msg.getContentObject();
-						System.out.println("messageObjectContent() = " + msg.getContentObject());
+						System.out.println(getLocalName() + ": messageObjectContent() = " + p);
 					} catch (UnreadableException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -179,9 +176,9 @@ public class Machine extends Agent {
 	}
 
 	public void setProductAtWork(Product productAtWork) {
-		System.out.println("setProductAtWork:" + productAtWork);
+		System.out.println(getLocalName() + ": setProductAtWork:" + productAtWork);
 		this.productAtWork = productAtWork;
-		ProcessProductBehaviour processBehaviour =new ProcessProductBehaviour(this.productAtWork); 
+		ProcessProductBehaviour processBehaviour =new ProcessProductBehaviour(this.productAtWork, this); 
 		addBehaviour(processBehaviour);
 	}
 
@@ -190,5 +187,25 @@ public class Machine extends Agent {
 		return "Machine (" + getMachineName() + "):\n\tlocationX = "
 				+ locationX + "\tlocationY = " + locationY
 				+ "\tavailableOperations = " + availableOperations;
+	}
+	
+	public DFAgentDescription[] getAgentListWithService(String serviceName) {
+		DFAgentDescription dfd = new DFAgentDescription();
+		ServiceDescription sd = new ServiceDescription();
+		sd.setType(serviceName);
+		dfd.addServices(sd);
+		DFAgentDescription[] agents = null;
+		try {
+			agents = DFService.search(this, dfd);
+		} catch (FIPAException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+//		System.out.println("agents with " + serviceName + "service:");
+//		for (DFAgentDescription a : agents)
+//			System.out.println("\t" + a.getName());
+
+		return agents;
 	}
 }
