@@ -23,7 +23,7 @@ public class MachineToMachineCfpContractResponder extends ContractNetResponder{
 	@Override
 	protected ACLMessage handleCfp(ACLMessage cfp) throws RefuseException,
 			FailureException, NotUnderstoodException {
-		System.out.println(myAgent.getName() + ": handleCFP\n" + "CFP received: agent (" + myAgent.getAID() + "):" + cfp);
+		System.out.println(myAgent.getName() + ": handleCFP\n" + "CFP received: agent (" + myAgent.getAID() + "):\n\t" + cfp);
 		ACLMessage reply;
 		try {
 			reply = decodeMessage(cfp);
