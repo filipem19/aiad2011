@@ -2,11 +2,15 @@ package systemManagement;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Container;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -48,40 +52,41 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 		JButton button1 = new JButton("Adicionar Máquina");
 		button1.addActionListener(this);
 		button1.setActionCommand("AddMaq");
-		button1.setSize(40, 40);
+		button1.setSize(100, 50);
 		
 		JButton button2 = new JButton("Adicionar AGV");
 		button2.addActionListener(this);
 		button2.setActionCommand("AddAGV");		
-		button2.setSize(40, 40);
+		button2.setSize(100, 50);
 		
 		JButton button3 = new JButton("Remover Máquina");
 		button3.addActionListener(this);
 		button3.setActionCommand("DelMaq");		
-		button3.setSize(40, 40);
+		button3.setSize(100, 50);
 		
 		JButton button4 = new JButton("Remover AGV");
 		button4.addActionListener(this);
 		button4.setActionCommand("DelAGV");		
-		button4.setSize(40, 40);
+		button4.setSize(100, 50);
 				
 		//JPanels
 		JPanel mapaOficina = new JPanel();
 		mapaOficina.setBackground(Color.ORANGE);
-		mapaOficina.setSize(350, 500);
-								
-		JPanel conjBotoes = new JPanel();
-		conjBotoes.setSize(150, 500);
-		conjBotoes.add(button1);
-		conjBotoes.add(button2);
-		conjBotoes.add(button3);
-		conjBotoes.add(button4);		
-	
+		mapaOficina.setSize(400, 500);
+		
+		//Box
+		Box botoes = Box.createVerticalBox();
+		botoes.add(button1);
+		botoes.add(button2);
+		botoes.add(button3);
+		botoes.add(button4);
+		botoes.setSize(100, 500);
+		
 		//Container
 		Container c = getContentPane();
-	    c.add(mapaOficina, BorderLayout.WEST);  
-	    c.add(conjBotoes, BorderLayout.EAST);
-		
+		c.add(botoes, BorderLayout.EAST);
+		c.add(mapaOficina, BorderLayout.WEST);  
+	    		
 		this.add(c);
 		//---   ---
 				
@@ -93,16 +98,16 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 		
 		//accao a executar quando pressionados os botoes
 		if ("AddMaq".equals(e.getActionCommand())) {
-			
+			System.out.println("AddMaq");
 			
 		} else if ("AddAGV".equals(e.getActionCommand())) {
-			
+			System.out.println("AddAGV");
 			
 		} else if ("DelMaq".equals(e.getActionCommand())) {
-			
+			System.out.println("DelMaq");
 			
 		} else if ("DelAGV".equals(e.getActionCommand())) {
-			
+			System.out.println("DelAGV");
 			
 		}
 	}
