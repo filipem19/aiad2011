@@ -1,89 +1,114 @@
 package systemManagement;
 
-import jade.domain.FIPAAgentManagement.DFAgentDescription;
-
-import java.awt.GridLayout;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.Vector;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 
-public class SystemManagerGUI extends JFrame implements ActionListener,
-		PropertyChangeListener {
+import products.Operation;
+import products.Product;
+import agents.machineEngine.Machine;
+
+
+public class SystemManagerGUI extends JFrame implements ActionListener{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -6978147188402748454L;
 
+	private Vector<Machine> machines;
+	private Vector<Product> products;
+	private Vector<Operation> operations;
 	private SystemManager sysManager;
-
+	
 	public SystemManagerGUI(SystemManager sysManager) {
 		this.sysManager = sysManager;
 		initializeWindowPreferences();
 	}
-
 	
-	private void initializeWindowPreferences() {
+
+	private void initializeWindowPreferences(){
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Initial platform");
 		setVisible(true);
-		setSize(300, 400);
-		setLocation(0, 0);
-
-		JPanel p = new JPanel(), p2 = new JPanel();
-		p.setLayout(new GridLayout(1, 1));
-		p2.setLayout(new GridLayout(1, 1));
+		setSize(500, 500);
+		setLocation(100, 100);
 		
-		Vector<String> vec = new Vector<String>();
+		//---Pagina Principal---
 		
-		DFAgentDescription[] agentList = sysManager.getAgentListWithService("ProcessProduct");
-		for(DFAgentDescription df : agentList){
-//			System.out.println(df.getName().getLocalName());
-			vec.add(df.getName().getLocalName());
-		}
+		//Buttons
+		JButton button1 = new JButton("Adicionar Máquina");
+		button1.addActionListener(this);
+		button1.setActionCommand("AddMaq");
+		button1.setSize(100, 50);
 		
-		p.add(createList(vec));
+		JButton button2 = new JButton("Adicionar AGV");
+		button2.addActionListener(this);
+		button2.setActionCommand("AddAGV");		
+		button2.setSize(100, 50);
 		
+		JButton button3 = new JButton("Remover Máquina");
+		button3.addActionListener(this);
+		button3.setActionCommand("DelMaq");		
+		button3.setSize(100, 50);
 		
-		p2.add(createList(new Vector<String>(sysManager.getExistingOperations().keySet())));
-		p2.add(createList(new Vector<String>(sysManager.getExistingProducts().keySet())));
-		add(p);
-		p.add(p2);
+		JButton button4 = new JButton("Remover AGV");
+		button4.addActionListener(this);
+		button4.setActionCommand("DelAGV");		
+		button4.setSize(100, 50);
+				
+		//JPanels
+		JPanel mapaOficina = new JPanel();
+		mapaOficina.setBackground(Color.ORANGE);
+		mapaOficina.setSize(400, 500);
 		
-		repaint();
+		//Box
+		Box botoes = Box.createVerticalBox();
+		botoes.add(button1);
+		botoes.add(button2);
+		botoes.add(button3);
+		botoes.add(button4);
+		botoes.setSize(100, 500);
+		
+		//Container
+		Container c = getContentPane();
+		c.add(botoes, BorderLayout.EAST);
+		c.add(mapaOficina, BorderLayout.WEST);  
+	    		
+		this.add(c);
+		//---   ---
+				
 	}
 
-	private JList createList (Vector<String> elements){
-		JList acList = new JList();
-		
-		Vector<String> vec = new Vector<String>();
-		
-		for(String element : elements)
-			vec.add(element);
-		
-		acList.setListData(vec);
-		
-		acList.setVisibleRowCount(5);
-		acList.setFixedCellHeight(18);
-		acList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-		
-		return acList;
-	}
-	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-	}
-
-	@Override
-	public void propertyChange(PropertyChangeEvent evt) {
-		System.out.println("old Value: " + evt.getOldValue().toString());
-		System.out.println("new Value: " + evt.getNewValue().toString());
+		//sysManager.registerExistingAgents(get);
+		
+		//accao a executar quando pressionados os botoes
+		if ("AddMaq".equals(e.getActionCommand())) {
+			System.out.println("AddMaq");
+			
+		} else if ("AddAGV".equals(e.getActionCommand())) {
+			System.out.println("AddAGV");
+			
+		} else if ("DelMaq".equals(e.getActionCommand())) {
+			System.out.println("DelMaq");
+			
+		} else if ("DelAGV".equals(e.getActionCommand())) {
+			System.out.println("DelAGV");
+			
+		}
 	}
 }
