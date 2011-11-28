@@ -2,32 +2,19 @@ package systemManagement;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Vector;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
-import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
-
-import products.Operation;
-import products.Product;
-import agents.machineEngine.Machine;
 
 
 public class SystemManagerGUI extends JFrame implements ActionListener{
@@ -37,9 +24,6 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 	 */
 	private static final long serialVersionUID = -6978147188402748454L;
 
-	private Vector<Machine> machines;
-	private Vector<Product> products;
-	private Vector<Operation> operations;
 	private SystemManager sysManager;
 	
 	public SystemManagerGUI(SystemManager sysManager) {
@@ -116,8 +100,6 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 		//Container
 		Container c = getContentPane();
 		c.add(janela);
-	    		
-		//---   ---
 		
 				
 	}

@@ -2,10 +2,8 @@ package products;
 
 import java.io.Serializable;
 
-public class Operation implements Serializable {
+public class Operation implements Serializable{
 
-	
-	
 	/**
 	 * 
 	 */
@@ -45,4 +43,5 @@ public class Operation implements Serializable {
 	public String toString() {
 		return "Operation (" + name + "):\n\tduration = " + duration + "\n\tdeltaweight = " + deltaWeight;
 	}
+
 }

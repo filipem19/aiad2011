@@ -15,7 +15,8 @@ import jade.wrapper.ControllerException;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import negotiationEngine.MachineToMachineCfpContractResponder;
+import negotiationEngine.MachineContractResponder;
+import negotiationEngine.MachineContractInitiator;
 import products.Operation;
 import products.Product;
 
@@ -132,7 +133,7 @@ public class Machine extends Agent {
 				.and(MessageTemplate
 						.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
 						MessageTemplate.MatchPerformative(ACLMessage.CFP));
-		addBehaviour(new MachineToMachineCfpContractResponder(this, template));
+		addBehaviour(new MachineContractResponder(this, template));
 	}
 
 	/**
@@ -140,7 +141,13 @@ public class Machine extends Agent {
 	 */
 	
 	public boolean isOperationAvailable(Operation oper) {
-		return availableOperations.contains(oper);
+		for(Operation operation : availableOperations){
+			if(operation.getOperationName().compareTo(oper.getOperationName()) == 0){
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 	public Enumeration<Operation> getAvailableOperations() {
