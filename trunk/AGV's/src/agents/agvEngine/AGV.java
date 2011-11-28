@@ -8,7 +8,7 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import negotiationEngine.MachineToAgvCfpContractResponder;
+import negotiationEngine.MachineContractResponder;
 
 public class AGV extends Agent {
 
@@ -70,7 +70,8 @@ public class AGV extends Agent {
 						.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
 						MessageTemplate.MatchPerformative(ACLMessage.CFP));
 
-		addBehaviour(new MachineToAgvCfpContractResponder(this, template));
+//		addBehaviour(new MachineToAgvCfpContractResponder(this, template));
+		addBehaviour(new MachineContractResponder(this, template));
 
 	}
 
