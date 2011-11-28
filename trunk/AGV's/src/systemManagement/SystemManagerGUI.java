@@ -4,17 +4,26 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.JSplitPane;
 import javax.swing.SwingConstants;
+import javax.swing.border.TitledBorder;
 
 import products.Operation;
 import products.Product;
@@ -48,46 +57,68 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 		
 		//---Pagina Principal---
 		
-		//Buttons
-		JButton button1 = new JButton("Adicionar Máquina");
-		button1.addActionListener(this);
-		button1.setActionCommand("AddMaq");
-		button1.setSize(100, 50);
-		
-		JButton button2 = new JButton("Adicionar AGV");
-		button2.addActionListener(this);
-		button2.setActionCommand("AddAGV");		
-		button2.setSize(100, 50);
-		
-		JButton button3 = new JButton("Remover Máquina");
-		button3.addActionListener(this);
-		button3.setActionCommand("DelMaq");		
-		button3.setSize(100, 50);
-		
-		JButton button4 = new JButton("Remover AGV");
-		button4.addActionListener(this);
-		button4.setActionCommand("DelAGV");		
-		button4.setSize(100, 50);
-				
-		//JPanels
+		//Mapa Oficina
 		JPanel mapaOficina = new JPanel();
 		mapaOficina.setBackground(Color.ORANGE);
 		mapaOficina.setSize(400, 500);
 		
-		//Box
-		Box botoes = Box.createVerticalBox();
-		botoes.add(button1);
-		botoes.add(button2);
-		botoes.add(button3);
-		botoes.add(button4);
-		botoes.setSize(100, 500);
+		//Opcoes de Adicionar e Remover
+		JPanel opcoes = new JPanel(new BorderLayout ());
+		JPanel adicionar = new JPanel(new BorderLayout ());
+		JPanel remover = new JPanel(new BorderLayout ());
+		remover.setLayout(new BoxLayout(remover, BoxLayout.PAGE_AXIS));
+		adicionar.setLayout(new BoxLayout(adicionar, BoxLayout.PAGE_AXIS));
+				
+		//Remover AGV
+		String[] listaAGV = {"agv1", "agv2"};
+		//TODO: criacao lista com agv
+		JComboBox listAGV = new JComboBox(listaAGV);
+		listAGV.setSelectedIndex(0);
+		listAGV.addActionListener(this);
+		
+		//Remover Maquina
+		String[] listaMaq = {"maq1", "maq2"};
+		//TODO: criacao lista com agv
+		JComboBox listMaq = new JComboBox(listaMaq);
+		listMaq.setSelectedIndex(0);
+		listMaq.addActionListener(this);
+		
+		//Border - Caixilhos
+		TitledBorder borderAdicionar, borderRemover;
+		borderAdicionar = BorderFactory.createTitledBorder("Adicionar");
+		adicionar.setBorder(borderAdicionar);
+		borderRemover = BorderFactory.createTitledBorder("Remover");
+		remover.setBorder(borderRemover);
+		
+		//Label
+		JLabel labelAGV = new JLabel("AGV's");
+		JLabel labelMaq = new JLabel("Máquinas");
+		
+		remover.add(labelMaq);
+		remover.add(listAGV, BorderLayout.LINE_START);
+		remover.add(labelAGV);
+		remover.add(listMaq, BorderLayout.LINE_END);
+		
+		opcoes.add(remover, BorderLayout.SOUTH);
+		
+		//Adicionar AGV
+		
+		//Adicionar Maquina
+		
+		opcoes.add(adicionar, BorderLayout.NORTH);
+				
+		//Janela Principal
+		JSplitPane janela = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, mapaOficina, opcoes);
+		Dimension minimumSize = new Dimension(200, 500);
+		mapaOficina.setMinimumSize(minimumSize);
+		opcoes.setMinimumSize(minimumSize);
 		
 		//Container
 		Container c = getContentPane();
-		c.add(botoes, BorderLayout.EAST);
-		c.add(mapaOficina, BorderLayout.WEST);  
+		c.add(janela);
 	    		
 		//---   ---
+		
 				
 	}
 
@@ -107,7 +138,6 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 			
 		} else if ("DelAGV".equals(e.getActionCommand())) {
 			System.out.println("DelAGV");
-			
 		}
 	}
 }
