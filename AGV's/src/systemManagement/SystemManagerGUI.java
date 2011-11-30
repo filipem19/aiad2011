@@ -1,20 +1,35 @@
 package systemManagement;
+      
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.util.Vector;
+  
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
+import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
+
+import products.Operation;
+import products.Product;
+import agents.machineEngine.Machine;
 
 
 public class SystemManagerGUI extends JFrame implements ActionListener{
@@ -24,7 +39,15 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 	 */
 	private static final long serialVersionUID = -6978147188402748454L;
 
+	private Vector<Machine> machines;
+	private Vector<Product> products;
+	private Vector<Operation> operations;
 	private SystemManager sysManager;
+	
+	private String[] listaAGV;
+	private JComboBox comboAGV;
+	private String[] listaMaq;
+	private JComboBox comboMaq;
 	
 	public SystemManagerGUI(SystemManager sysManager) {
 		this.sysManager = sysManager;
@@ -52,22 +75,28 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 		JPanel remover = new JPanel(new BorderLayout ());
 		remover.setLayout(new BoxLayout(remover, BoxLayout.PAGE_AXIS));
 		adicionar.setLayout(new BoxLayout(adicionar, BoxLayout.PAGE_AXIS));
-				
+					
+		
 		//Remover AGV
-		String[] listaAGV = {"agv1", "agv2"};
-		//TODO: criacao lista com agv
-		JComboBox listAGV = new JComboBox(listaAGV);
-		listAGV.setSelectedIndex(0);
-		listAGV.addActionListener(this);
-		
+		DFAgentDescription[] agvs = sysManager.getAgentListWithService("Transport");
+		listaAGV = new String[agvs.length];
+		for(int i=0; i < agvs.length; i++){
+			listaAGV[i] = agvs[i].getName().getLocalName();
+		}
+		comboAGV = new JComboBox(listaAGV);
+		comboAGV.addActionListener(this);
+				
 		//Remover Maquina
-		String[] listaMaq = {"maq1", "maq2"};
-		//TODO: criacao lista com agv
-		JComboBox listMaq = new JComboBox(listaMaq);
-		listMaq.setSelectedIndex(0);
-		listMaq.addActionListener(this);
+
+		DFAgentDescription[] maquinas = sysManager.getAgentListWithService("ProcessProduct");
+		listaMaq = new String[maquinas.length];
+		for(int i=0; i < maquinas.length; i++){
+			listaMaq[i] = maquinas[i].getName().getLocalName();
+		}
+		comboMaq = new JComboBox(listaMaq);
+		comboMaq.addActionListener(this);
 		
-		//Border - Caixilhos
+		//Border - Criar Caixilhos
 		TitledBorder borderAdicionar, borderRemover;
 		borderAdicionar = BorderFactory.createTitledBorder("Adicionar");
 		adicionar.setBorder(borderAdicionar);
@@ -78,16 +107,33 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 		JLabel labelAGV = new JLabel("AGV's");
 		JLabel labelMaq = new JLabel("Máquinas");
 		
-		remover.add(labelMaq);
-		remover.add(listAGV, BorderLayout.LINE_START);
+		//JButton
+		JButton removeAGV = new JButton();
+		removeAGV.setText("Confirmar");
+		removeAGV.setActionCommand("removeAGV");
+		removeAGV.addActionListener(this);
+		removeAGV.setToolTipText("Escolha o AGV que pretende remover da lista acima.");
+
+		JButton removeMaq = new JButton();
+		removeMaq.setText("Confirmar");
+		removeMaq.setActionCommand("removeMaq");
+		removeMaq.addActionListener(this);
+		removeMaq.setToolTipText("Escolha a Maquina que pretende remover da lista acima.");
+		
+		//Caixilho Remover
 		remover.add(labelAGV);
-		remover.add(listMaq, BorderLayout.LINE_END);
+		remover.add(comboAGV);
+		remover.add(removeAGV);
+		remover.add(labelMaq);
+		remover.add(comboMaq);
+		remover.add(removeMaq);
 		
 		opcoes.add(remover, BorderLayout.SOUTH);
 		
 		//Adicionar AGV
 		
 		//Adicionar Maquina
+		
 		
 		opcoes.add(adicionar, BorderLayout.NORTH);
 				
@@ -100,26 +146,21 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 		//Container
 		Container c = getContentPane();
 		c.add(janela);
-		
-				
+	    		
+		//---   ---	
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		//sysManager.registerExistingAgents(get);
 		
 		//accao a executar quando pressionados os botoes
-		if ("AddMaq".equals(e.getActionCommand())) {
-			System.out.println("AddMaq");
+		if ("removeAGV".equals(e.getActionCommand())) {
+			System.out.println("Vou remover o AGV " + comboAGV.getSelectedItem().toString());
+			sysManager.removeAgv(comboAGV.getSelectedItem().toString());
 			
-		} else if ("AddAGV".equals(e.getActionCommand())) {
-			System.out.println("AddAGV");
-			
-		} else if ("DelMaq".equals(e.getActionCommand())) {
-			System.out.println("DelMaq");
-			
-		} else if ("DelAGV".equals(e.getActionCommand())) {
-			System.out.println("DelAGV");
-		}
+		} else if ("removeMaq".equals(e.getActionCommand())) {
+			System.out.println("Vou remover a Maquina " + comboMaq.getSelectedItem().toString());
+			sysManager.removeMachine(comboMaq.getSelectedItem().toString());
+		} 
 	}
 }

@@ -1,5 +1,5 @@
 package systemManagement;
-
+      
 import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
@@ -15,10 +15,11 @@ import jade.wrapper.StaleProxyException;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
+import java.util.HashMap; 
 import java.util.LinkedList;
 import java.util.Vector;
 
@@ -331,6 +332,13 @@ public class SystemManager extends GuiAgent {
 
 	public void removeAgv(String agvName) {
 		//TODO 
+		DFAgentDescription[] agentes = getAgentListWithService("Transport");
+		for(int i=0; i < agentes.length; i++)
+		{
+			//if(agentes[i].getName().getLocalName().toString() = agvName)
+				
+		}
+		
 	}
 
 	public void removeMachine(String machineName) {
