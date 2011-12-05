@@ -16,7 +16,6 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import negotiationEngine.MachineContractResponder;
-import negotiationEngine.MachineContractInitiator;
 import products.Operation;
 import products.Product;
 
@@ -71,7 +70,7 @@ public class Machine extends Agent {
 				"ProcessProduct");
 
 		/* Starting FIPA contract Responder Protocols */
-		machineToMachineContractResponder();
+		machineContractResponder();
 		
 	}
 
@@ -79,6 +78,11 @@ public class Machine extends Agent {
 		/* test for contract behaviour */
 		addBehaviour(new CyclicBehaviour(this) {
 		
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -8611591964691930759L;
+
 			public void action() {
 				ACLMessage msg = receive(MessageTemplate.MatchPerformative(ACLMessage.INFORM));
 				if (msg != null){
@@ -127,7 +131,7 @@ public class Machine extends Agent {
 	 * Initiates the ContractResponder to other machines CFP's (Call for
 	 * proposal to process a product)
 	 */
-	private void machineToMachineContractResponder() {
+	private void machineContractResponder() {
 
 		MessageTemplate template = MessageTemplate
 				.and(MessageTemplate

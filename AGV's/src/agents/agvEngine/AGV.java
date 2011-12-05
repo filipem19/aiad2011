@@ -70,7 +70,6 @@ public class AGV extends Agent {
 						.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
 						MessageTemplate.MatchPerformative(ACLMessage.CFP));
 
-//		addBehaviour(new MachineToAgvCfpContractResponder(this, template));
 		addBehaviour(new MachineContractResponder(this, template));
 
 	}
@@ -184,5 +183,25 @@ public class AGV extends Agent {
 				+ "\tcost = " + cost + "\tlocationX = " + locationX
 				+ "\tlocationY = " + locationY + "\tvelocity = " + velocity
 				+ "\tmaxLoad = " + maxLoad + "\tstatus = " + status;
+	}
+	
+	public DFAgentDescription[] getAgentListWithService(String serviceName) {
+		DFAgentDescription dfd = new DFAgentDescription();
+		ServiceDescription sd = new ServiceDescription();
+		sd.setType(serviceName);
+		dfd.addServices(sd);
+		DFAgentDescription[] agents = null;
+		try {
+			agents = DFService.search(this, dfd);
+		} catch (FIPAException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+//		System.out.println("agents with " + serviceName + "service:");
+//		for (DFAgentDescription a : agents)
+//			System.out.println("\t" + a.getName());
+
+		return agents;
 	}
 }

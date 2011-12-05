@@ -22,7 +22,6 @@ public class MachineCFP implements Serializable{
 		// TODO Auto-generated constructor stub
 		this.product = product;
 		this.origin = origin;
-		this.destination = destination;
 	}
 	
 	public Product getProduct() {

@@ -6,7 +6,7 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.lang.acl.ACLMessage;
 
 import java.io.IOException;
-import java.util.Vector;
+import java.util.Date;
 
 import negotiationEngine.MachineCFP;
 import negotiationEngine.MachineContractInitiator;
@@ -67,6 +67,9 @@ public class ProcessProductBehaviour extends SimpleBehaviour {
 		cfp = addReceivers(cfp, machines);
 		cfp = addReceivers(cfp, agvs);
 		
+		cfp.removeReceiver(myAgent.getAID());
+		
+		cfp.setReplyByDate(new Date(System.currentTimeMillis() + 7000));
 		myAgent.addBehaviour(new MachineContractInitiator(myAgent, cfp));
 		
 	}
