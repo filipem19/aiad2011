@@ -15,11 +15,10 @@ import jade.wrapper.StaleProxyException;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap; 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Vector;
 
@@ -52,6 +51,11 @@ public class SystemManager extends GuiAgent {
 	private void testFunctions() {
 		// Comportamento para adicionar por um produto numa maquina
 		addBehaviour(new CyclicBehaviour(this) {
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -1232462488859989835L;
 
 			@Override
 			public void action() {

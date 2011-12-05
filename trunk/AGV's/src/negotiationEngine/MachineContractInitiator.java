@@ -17,17 +17,18 @@ public class MachineContractInitiator extends ContractNetInitiator{
 
 	@Override
 	protected void handleAllResponses(Vector responses, Vector acceptances) {
+		System.out.println(myAgent.getLocalName() +" : handle all responses");
 		Enumeration e = responses.elements();
-		while(e.hasMoreElements()){
-			ACLMessage msg = (ACLMessage) e.nextElement();
-			System.out.println(myAgent.getAID() + "message received(conversationId:" + msg.getConversationId() + "): " + msg);	
-		}
+//		while(e.hasMoreElements()){
+//			ACLMessage msg = (ACLMessage) e.nextElement();
+//			System.out.println(myAgent.getLocalName()+ "message received(conversationId:" + msg.getConversationId() + "): " + msg);	
+//		}
 	}
 	
 	@Override
 	protected void handlePropose(ACLMessage propose, Vector acceptances) {
 		// TODO Auto-generated method stub
-		System.out.println(myAgent.getAID().getLocalName() + " received a propose(s):");
+		System.out.println(myAgent.getAID().getLocalName() + " received a propose from " + propose.getSender().getLocalName() + ": " + propose.getContent());
 		Enumeration e = acceptances.elements();
 		while(e.hasMoreElements()){
 			ACLMessage msg = (ACLMessage) e.nextElement();
