@@ -2,6 +2,7 @@ package agents.agvEngine;
 
 import jade.core.AID;
 import jade.core.Agent;
+import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPANames;
@@ -9,6 +10,8 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import jade.wrapper.ControllerException;
+import jade.wrapper.StaleProxyException;
 
 import java.util.HashMap;
 
@@ -61,13 +64,26 @@ public class AGV extends Agent {
 					(Double) args[5], (String) args[6], (String) args[7]);
 
 			registerAgentAtDF("Transport:" + getAgvName(), "Transport");
+			
 			initializeAgvContractResponder();
-
+			
 			addBehaviour(new AgvAgentSync(this));
+			addBehaviour(new AgvShutdown());
 		}
 
 	}
 
+	protected void shutdownAgent() {
+		try {
+			DFService.deregister(this);
+			doDelete();
+		} catch (FIPAException e) {
+			// TODO Auto-generated catch block
+			System.err.println("ERROR - Deregistering agent from DF");
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * initializes contract responder for product transport proposals from
 	 * machines
