@@ -2,6 +2,7 @@ package negotiationEngine;
 
 import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
+import jade.lang.acl.UnreadableException;
 import jade.proto.ContractNetInitiator;
 
 import java.util.Enumeration;
@@ -28,7 +29,17 @@ public class MachineContractInitiator extends ContractNetInitiator{
 	@Override
 	protected void handlePropose(ACLMessage propose, Vector acceptances) {
 		// TODO Auto-generated method stub
-		System.out.println(myAgent.getAID().getLocalName() + " received a propose from " + propose.getSender().getLocalName() + ": " + propose.getContent());
+		MachineCFP content = null;
+		
+		try {
+			content = (MachineCFP) propose.getContentObject();
+		} catch (UnreadableException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		if(content == null)
+			return;
+		System.out.println(myAgent.getAID().getLocalName() + " received a propose from " + propose.getSender().getLocalName() + ": " + content);
 		Enumeration e = acceptances.elements();
 		while(e.hasMoreElements()){
 			ACLMessage msg = (ACLMessage) e.nextElement();
