@@ -1,5 +1,6 @@
 package agents.agvEngine;
 
+import jade.core.AID;
 import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
@@ -8,7 +9,11 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+
+import java.util.HashMap;
+
 import negotiationEngine.MachineContractResponder;
+import systemManagement.Location;
 
 public class AGV extends Agent {
 
@@ -25,7 +30,9 @@ public class AGV extends Agent {
 	private double currentLoad;
 	private double maxLoad;
 	private String status, agvName;
-
+	
+	private HashMap<AID, Location> machineLocation;
+	
 	public void setAgvProperties(int autonomy, int cost, int locationX,
 			int locationY, int velocity, double maxLoad, String status,
 			String agvName) {
@@ -55,7 +62,8 @@ public class AGV extends Agent {
 
 			registerAgentAtDF("Transport:" + getAgvName(), "Transport");
 			initializeAgvContractResponder();
-//			System.out.println(toString());
+
+			addBehaviour(new AgvAgentSync(this));
 		}
 
 	}
@@ -203,5 +211,13 @@ public class AGV extends Agent {
 //			System.out.println("\t" + a.getName());
 
 		return agents;
+	}
+
+	public HashMap<AID, Location> getMachineLocation() {
+		return machineLocation;
+	}
+
+	public void setMachineLocation(HashMap<AID, Location> machineLocation) {
+		this.machineLocation = machineLocation;
 	}
 }

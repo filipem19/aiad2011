@@ -1,8 +1,6 @@
 package negotiationEngine;
 
-import java.io.IOException;
-
-import systemManagement.SystemManager.ObjectType;
+import jade.core.AID;
 import jade.core.Agent;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.FailureException;
@@ -12,6 +10,12 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import jade.proto.ContractNetResponder;
+
+import java.io.IOException;
+import java.util.HashMap;
+
+import systemManagement.Location;
+import systemManagement.SystemManager.ObjectType;
 import agents.agvEngine.AGV;
 import agents.machineEngine.Machine;
 
@@ -40,7 +44,7 @@ public class MachineContractResponder extends ContractNetResponder{
 		if(myAgent.getClass() == AGV.class){
 			try {
 				if(cfp.getContentObject().getClass() == MachineCFP.class)
-					reply = getAgvMessageContent(reply, (MachineCFP)cfp.getContentObject());
+					reply = getAgvMessageContent(reply, (MachineCFP)cfp.getContentObject(), (AGV) myAgent);
 			} catch (UnreadableException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -78,17 +82,28 @@ public class MachineContractResponder extends ContractNetResponder{
 		return reply;
 	}
 
-	private ACLMessage getAgvMessageContent(ACLMessage reply, MachineCFP content) {
+	private ACLMessage getAgvMessageContent(ACLMessage reply, MachineCFP content, AGV agent) {
 		// TODO Auto-generated method stub
-		content = calculateCosts(content);
+		content = calculateCosts(content, agent);
 		return reply;
 	}
 
-	private MachineCFP calculateCosts(MachineCFP content) {
-		for(DFAgentDescription agent : ((AGV)myAgent).getAgentListWithService("ProcessProduct")){
-			//falta posição das máquinas
+	private MachineCFP calculateCosts(MachineCFP content, AGV agent) {
+		HashMap<AID, Integer> mapCost = new HashMap<AID, Integer>();
+		
+		for(DFAgentDescription dfAgent : agent.getAgentListWithService("ProcessProduct")){
+			mapCost.put(dfAgent.getName(), (int)calculateCost(dfAgent, agent));
 		}
-		return null;
+		
+		content.setMachineCostMap(mapCost);
+		
+		return content;
+	}
+
+	private double calculateCost(DFAgentDescription dfAgent, AGV agent) {
+		//TODO calculo do custo de outra maneira se necessário
+		Location destination = agent.getMachineLocation().get(dfAgent.getName()), origin = new Location(agent.getLocationX(), agent.getLocationY());
+		return origin.distanceTo(destination)*(agent.getCost());
 	}
 
 	@Override

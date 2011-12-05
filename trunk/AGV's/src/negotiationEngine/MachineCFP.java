@@ -52,5 +52,8 @@ public class MachineCFP implements Serializable{
 		return machineCostMap;
 	}
 
-	
+	public void setMachineCostMap(HashMap<AID, Integer> machineCostMap) {
+		this.machineCostMap = machineCostMap;
+	}
+
 }

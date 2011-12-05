@@ -1,5 +1,6 @@
 package systemManagement;
       
+import jade.core.AID;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
@@ -36,6 +37,7 @@ public class SystemManager extends GuiAgent {
 		Machine, Operation, Product, Agv
 	};
 
+	private HashMap<AID, Location> existingMachines = new HashMap<AID, Location>();
 	private HashMap<String, Operation> existingOperations = new HashMap<String, Operation>();
 	private HashMap<String, Product> existingProducts = new HashMap<String, Product>();
 
@@ -136,6 +138,26 @@ public class SystemManager extends GuiAgent {
 					+ e.getMessage());
 			e.printStackTrace();
 		}
+		
+		sendMachineLocationToAgvs();
+		
+	}
+
+	private void sendMachineLocationToAgvs() {
+		ACLMessage msg = new ACLMessage(ACLMessage.PROPAGATE);
+		try {
+			msg.setContentObject(existingMachines);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return;
+		}
+		
+		for(DFAgentDescription agent : getAgentListWithService("Transport")){
+			msg.addReceiver(agent.getName());
+		}
+		
+		send(msg);
 	}
 
 	private ObjectType decodeLine(String strLine, ObjectType objectType) {
@@ -283,6 +305,9 @@ public class SystemManager extends GuiAgent {
 				AgentController ac = getContainerController().createNewAgent(
 						machineName, "agents.machineEngine.Machine", args);
 				ac.start();
+				AID aid = new AID();
+				aid.setName(ac.getName());
+				existingMachines.put(aid, new Location(locationX, locationY));
 			} catch (StaleProxyException e) {
 				// TODO Auto-generated catch block
 				System.err.println("Error - problem creating agent ("
