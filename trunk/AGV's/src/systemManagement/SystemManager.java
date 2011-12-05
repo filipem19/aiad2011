@@ -1,11 +1,11 @@
 package systemManagement;
       
-import jade.core.AID;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.gui.DFAgentDscDlg;
 import jade.gui.GuiAgent;
 import jade.gui.GuiEvent;
 import jade.lang.acl.ACLMessage;
@@ -37,7 +37,6 @@ public class SystemManager extends GuiAgent {
 		Machine, Operation, Product, Agv
 	};
 
-	private HashMap<AID, Location> existingMachines = new HashMap<AID, Location>();
 	private HashMap<String, Operation> existingOperations = new HashMap<String, Operation>();
 	private HashMap<String, Product> existingProducts = new HashMap<String, Product>();
 
@@ -138,26 +137,6 @@ public class SystemManager extends GuiAgent {
 					+ e.getMessage());
 			e.printStackTrace();
 		}
-		
-		sendMachineLocationToAgvs();
-		
-	}
-
-	private void sendMachineLocationToAgvs() {
-		ACLMessage msg = new ACLMessage(ACLMessage.PROPAGATE);
-		try {
-			msg.setContentObject(existingMachines);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return;
-		}
-		
-		for(DFAgentDescription agent : getAgentListWithService("Transport")){
-			msg.addReceiver(agent.getName());
-		}
-		
-		send(msg);
 	}
 
 	private ObjectType decodeLine(String strLine, ObjectType objectType) {
@@ -305,9 +284,6 @@ public class SystemManager extends GuiAgent {
 				AgentController ac = getContainerController().createNewAgent(
 						machineName, "agents.machineEngine.Machine", args);
 				ac.start();
-				AID aid = new AID();
-				aid.setName(ac.getName());
-				existingMachines.put(aid, new Location(locationX, locationY));
 			} catch (StaleProxyException e) {
 				// TODO Auto-generated catch block
 				System.err.println("Error - problem creating agent ("
@@ -358,18 +334,39 @@ public class SystemManager extends GuiAgent {
 
 		return agents;
 	}
-
+	
+	/**
+	 * 
+	 * @param agvName
+	 */
 	public void removeAgv(String agvName) {
 		//TODO 
-		DFAgentDescription[] agentes = getAgentListWithService("Transport");
-		for(int i=0; i < agentes.length; i++)
-		{
-			//if(agentes[i].getName().getLocalName().toString() = agvName)
-				
-		}
 		
+		DFAgentDescription[] agentes = getAgentListWithService("Transport");
+		for(DFAgentDescription agent : agentes)
+		{
+			
+			
+			
+			/*try {
+				DFService.deregister(this, agent);
+			} catch (FIPAException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+//		for(int i=0; i < agentes.length; i++)
+//		{
+//			if(agentes[i].getName().getLocalName().toString() == agvName)
+//			{
+//			}	*/
+		}
 	}
 
+	/**
+	 * 
+	 * @param machineName
+	 */
 	public void removeMachine(String machineName) {
 		//TODO 
 	}

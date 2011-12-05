@@ -18,6 +18,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
+import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
 import products.Operation;
@@ -63,13 +64,12 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 		mapaOficina.setSize(400, 500);
 		
 		//Opcoes de Adicionar e Remover
-		JPanel opcoes = new JPanel(new BorderLayout ());
+		JPanel opcoes = new JPanel(new BorderLayout());
 		JPanel adicionar = new JPanel(new BorderLayout ());
 		JPanel remover = new JPanel(new BorderLayout ());
 		remover.setLayout(new BoxLayout(remover, BoxLayout.PAGE_AXIS));
 		adicionar.setLayout(new BoxLayout(adicionar, BoxLayout.PAGE_AXIS));
 					
-		
 		//Remover AGV
 		DFAgentDescription[] agvs = sysManager.getAgentListWithService("Transport");
 		listaAGV = new String[agvs.length];
@@ -80,7 +80,6 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 		comboAGV.addActionListener(this);
 				
 		//Remover Maquina
-
 		DFAgentDescription[] maquinas = sysManager.getAgentListWithService("ProcessProduct");
 		listaMaq = new String[maquinas.length];
 		for(int i=0; i < maquinas.length; i++){
@@ -102,13 +101,13 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 		
 		//JButton
 		JButton removeAGV = new JButton();
-		removeAGV.setText("Confirmar");
+		removeAGV.setText("Remover AGV");
 		removeAGV.setActionCommand("removeAGV");
 		removeAGV.addActionListener(this);
 		removeAGV.setToolTipText("Escolha o AGV que pretende remover da lista acima.");
 
 		JButton removeMaq = new JButton();
-		removeMaq.setText("Confirmar");
+		removeMaq.setText("Remover Máquina");
 		removeMaq.setActionCommand("removeMaq");
 		removeMaq.addActionListener(this);
 		removeMaq.setToolTipText("Escolha a Maquina que pretende remover da lista acima.");
@@ -124,9 +123,76 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 		opcoes.add(remover, BorderLayout.SOUTH);
 		
 		//Adicionar AGV
+		//JButton
+		JButton addAGV = new JButton();
+		addAGV.setText("Adicionar AGV");
+		addAGV.setActionCommand("addAGV");
+		addAGV.addActionListener(this);
 		
+		//Parametros AGV
+		JLabel labelNomeAGV = new JLabel("Nome AGV");
+		JTextField nomeAGVText = new JTextField();
+		JLabel labelAutonomiaAGV = new JLabel("Autonomia AGV");
+		JTextField autonomiaAGVText = new JTextField();
+		JLabel labelCustoAGV = new JLabel("Custo AGV");
+		JTextField custoAGVText = new JTextField();
+		JLabel labelXAGV = new JLabel("Posição X AGV");
+		JTextField xAGVText = new JTextField();
+		JLabel labelYAGV = new JLabel("Posição Y AGV");
+		JTextField yAGVText = new JTextField();
+		JLabel labelVelocidadeAGV = new JLabel("Velocidade AGV");
+		JTextField velocidadeAGVText = new JTextField();
+		JLabel labelCargaMaxAGV = new JLabel("Carga Máxima AGV");
+		JTextField cargaMaxAGVText = new JTextField();
+		JLabel labelEstadoAGV = new JLabel("Estado AGV");
+		String[] listaEstados = {"estado1", "estado2"};
+		JComboBox estadosAGV = new JComboBox(listaEstados);
+	
 		//Adicionar Maquina
+		//JButton
+		JButton addMaq = new JButton();
+		addMaq.setText("Adicionar Máquina");
+		addMaq.setActionCommand("addMaq");
+		addMaq.addActionListener(this);
 		
+		//Parametros Maquina - locationX locationY [availableOperations]
+		JLabel labelNomeMaq = new JLabel("Nome Máquina");
+		JTextField nomeMaqText = new JTextField();
+		JLabel labelXMaq = new JLabel("Posição X Máquina");
+		JTextField xMaqText = new JTextField();
+		JLabel labelYMaq = new JLabel("Posição Y Máquina");
+		JTextField yMaqText = new JTextField();
+		JLabel labelOperacoes = new JLabel("Operações Máquina");
+		JTextField OperacoesText = new JTextField();
+		
+		//Caixilho Adicionar
+		adicionar.add(labelNomeAGV);
+		adicionar.add(nomeAGVText);
+		adicionar.add(labelAutonomiaAGV);
+		adicionar.add(autonomiaAGVText);
+		adicionar.add(labelCustoAGV);
+		adicionar.add(custoAGVText);
+		adicionar.add(labelXAGV);
+		adicionar.add(xAGVText);
+		adicionar.add(labelYAGV);
+		adicionar.add(yAGVText);
+		adicionar.add(labelVelocidadeAGV);
+		adicionar.add(velocidadeAGVText);
+		adicionar.add(labelCargaMaxAGV);
+		adicionar.add(cargaMaxAGVText);
+		adicionar.add(labelEstadoAGV);
+		adicionar.add(estadosAGV);
+		adicionar.add(addAGV);
+		
+		adicionar.add(labelNomeMaq);
+		adicionar.add(nomeMaqText);
+		adicionar.add(labelXMaq);
+		adicionar.add(xMaqText);
+		adicionar.add(labelYMaq);
+		adicionar.add(yMaqText);
+		adicionar.add(labelOperacoes);
+		adicionar.add(OperacoesText);
+		adicionar.add(addMaq);
 		
 		opcoes.add(adicionar, BorderLayout.NORTH);
 				
@@ -150,10 +216,23 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 		if ("removeAGV".equals(e.getActionCommand())) {
 			System.out.println("Vou remover o AGV " + comboAGV.getSelectedItem().toString());
 			sysManager.removeAgv(comboAGV.getSelectedItem().toString());
+			System.out.println("AGV " + comboAGV.getSelectedItem().toString() + " removido");
 			
 		} else if ("removeMaq".equals(e.getActionCommand())) {
 			System.out.println("Vou remover a Maquina " + comboMaq.getSelectedItem().toString());
 			sysManager.removeMachine(comboMaq.getSelectedItem().toString());
+			System.out.println("Máquina " + comboMaq.getSelectedItem().toString() + " removida");
+			
+		} else if ("addAGV".equals(e.getActionCommand())) {
+			System.out.println("Vou adiconar o AGV ");
+			//sysManager.addAgv(String agvName, String[] params);
+			System.out.println("AGV adicionado");
+			
+		} else if ("addMaq".equals(e.getActionCommand())) {
+			System.out.println("Vou adiconar a Máquina ");
+			//sysManager.addMachine(String machineName, String[] params);
+			System.out.println("Máquina adicionada");
+			
 		} 
 	}
 }
