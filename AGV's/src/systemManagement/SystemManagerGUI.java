@@ -43,12 +43,22 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 	private String[] listaMaq;
 	private JComboBox comboMaq;
 	
+	private String[] listaEstados = {"estado1", "estado2"}; //--estados possiveis
+	
+	private JTextField nomeAGVText = new JTextField();
+	private JTextField autonomiaAGVText = new JTextField();
+	private JTextField custoAGVText = new JTextField();
+	private JTextField xAGVText = new JTextField();
+	private JTextField yAGVText = new JTextField();
+	private JTextField velocidadeAGVText = new JTextField();
+	private JTextField cargaMaxAGVText = new JTextField();
+	private JComboBox estadosAGV = new JComboBox(listaEstados);
+	
 	public SystemManagerGUI(SystemManager sysManager) {
 		this.sysManager = sysManager;
 		initializeWindowPreferences();
 	}
 	
-
 	private void initializeWindowPreferences(){
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Initial platform");
@@ -131,22 +141,13 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 		
 		//Parametros AGV
 		JLabel labelNomeAGV = new JLabel("Nome AGV");
-		JTextField nomeAGVText = new JTextField();
 		JLabel labelAutonomiaAGV = new JLabel("Autonomia AGV");
-		JTextField autonomiaAGVText = new JTextField();
 		JLabel labelCustoAGV = new JLabel("Custo AGV");
-		JTextField custoAGVText = new JTextField();
 		JLabel labelXAGV = new JLabel("Posição X AGV");
-		JTextField xAGVText = new JTextField();
 		JLabel labelYAGV = new JLabel("Posição Y AGV");
-		JTextField yAGVText = new JTextField();
 		JLabel labelVelocidadeAGV = new JLabel("Velocidade AGV");
-		JTextField velocidadeAGVText = new JTextField();
 		JLabel labelCargaMaxAGV = new JLabel("Carga Máxima AGV");
-		JTextField cargaMaxAGVText = new JTextField();
 		JLabel labelEstadoAGV = new JLabel("Estado AGV");
-		String[] listaEstados = {"estado1", "estado2"};
-		JComboBox estadosAGV = new JComboBox(listaEstados);
 	
 		//Adicionar Maquina
 		//JButton
@@ -212,27 +213,43 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
-		//accao a executar quando pressionados os botoes
 		if ("removeAGV".equals(e.getActionCommand())) {
 			System.out.println("Vou remover o AGV " + comboAGV.getSelectedItem().toString());
 			sysManager.removeAgv(comboAGV.getSelectedItem().toString());
 			System.out.println("AGV " + comboAGV.getSelectedItem().toString() + " removido");
+			
+			//Refresh
+			comboAGV.removeItem(comboAGV.getSelectedItem());
+			this.repaint();
 			
 		} else if ("removeMaq".equals(e.getActionCommand())) {
 			System.out.println("Vou remover a Maquina " + comboMaq.getSelectedItem().toString());
 			sysManager.removeMachine(comboMaq.getSelectedItem().toString());
 			System.out.println("Máquina " + comboMaq.getSelectedItem().toString() + " removida");
 			
+			//Refresh
+			comboMaq.removeItem(comboMaq.getSelectedItem());
+			this.repaint();
+			
 		} else if ("addAGV".equals(e.getActionCommand())) {
 			System.out.println("Vou adiconar o AGV ");
 			//sysManager.addAgv(String agvName, String[] params);
 			System.out.println("AGV adicionado");
+			
+
+			
+			//Refresh
+			//comboAGV.addItem(comboAGV.getSelectedItem());
+			this.repaint();
 			
 		} else if ("addMaq".equals(e.getActionCommand())) {
 			System.out.println("Vou adiconar a Máquina ");
 			//sysManager.addMachine(String machineName, String[] params);
 			System.out.println("Máquina adicionada");
 			
+			//Refresh
+			//comboMaq.addItem(comboMaq.getSelectedItem());
+			this.repaint();
 		} 
 	}
 }
