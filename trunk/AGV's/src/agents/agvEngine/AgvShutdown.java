@@ -1,5 +1,6 @@
 package agents.agvEngine;
 
+import agents.machineEngine.Machine;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
@@ -13,15 +14,10 @@ public class AgvShutdown extends CyclicBehaviour{
 
 	@Override
 	public void action() {
-		/*ACLMessage msg = myAgent.receive(MessageTemplate.MatchPerformative(ACLMessage.INFORM));
-		ACLMessage msg2 = new ACLMessage(ACLMessage.INFORM);
-		msg2.addReceiver(myAgent.getAID());
-		if(msg.getContent().compareTo("TAKE_DOWN") == 0){
-			((AGV)myAgent).shutdownAgent();
-		}*/
 		
 		ACLMessage msg = myAgent.receive(MessageTemplate.MatchPerformative(ACLMessage.INFORM));
-		if(msg != null){
+		
+		if(msg != null && myAgent.getClass() == AGV.class){
 			System.out.print("entrei \n");
 			if(msg.getContent().compareTo("TAKE_DOWN") == 0){
 				((AGV)myAgent).shutdownAgent();
