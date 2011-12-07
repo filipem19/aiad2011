@@ -53,8 +53,8 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Initial platform");
 		setVisible(true);
-		setSize(500, 500);
-		setLocation(100, 100);
+		setSize(500, 800);
+		setLocation(900, 50);
 		
 		//---Pagina Principal---
 		
