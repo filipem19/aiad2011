@@ -15,8 +15,6 @@ import jade.wrapper.ControllerException;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import agents.agvEngine.AgvShutdown;
-
 import negotiationEngine.MachineContractResponder;
 import products.Operation;
 import products.Product;
@@ -53,14 +51,13 @@ public class Machine extends Agent {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			// System.out.println(toString());
 
 			addBehaviour(new MachineShutdown(this));
 		}
 	}
 
 	protected void shutdownAgent() {
-		doDelete();
+		this.doDelete();
 	}
 
 	public void setMachineProperties(int locationX, int locationY,
@@ -73,7 +70,7 @@ public class Machine extends Agent {
 	}
 
 	public void initializeAgent() {
-		testFunction();
+//		testFunction();
 		registerAgentAtDF("ProcessProduct:" + getMachineName(),
 				"ProcessProduct");
 
