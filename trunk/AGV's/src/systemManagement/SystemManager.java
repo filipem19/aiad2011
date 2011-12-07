@@ -29,6 +29,9 @@ import products.Product;
 
 public class SystemManager extends GuiAgent {
 
+	//Constants
+	public final static String TAKE_DOWN = "TAKE_DOWN";
+	
 	/**
 	 * 
 	 */
@@ -342,9 +345,9 @@ public class SystemManager extends GuiAgent {
 	 */
 	public void removeAgv(String agvName) {
 		
-		AID aID = new AID(agvName, AID.ISGUID);
+		AID aID = new AID(agvName, AID.ISLOCALNAME);
 		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
-		msg.setContent("TAKE_DOWN");
+		msg.setContent(TAKE_DOWN);
 		msg.addReceiver(aID);
 		send(msg);
 	}
@@ -355,9 +358,9 @@ public class SystemManager extends GuiAgent {
 	 */
 	public void removeMachine(String machineName) {
 		
-		AID aID = new AID(machineName, AID.ISGUID);
+		AID aID = new AID(machineName, AID.ISLOCALNAME);
 		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
-		msg.setContent("TAKE_DOWN");
+		msg.setContent(TAKE_DOWN);
 		msg.addReceiver(aID);
 		send(msg);
 	}
