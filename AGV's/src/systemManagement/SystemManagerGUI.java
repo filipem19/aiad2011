@@ -207,7 +207,7 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 		Container c = getContentPane();
 		c.add(janela);
 	    		
-		//---   ---	
+		//---   ---
 	}
 
 	@Override
@@ -218,19 +218,32 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 			sysManager.removeAgv(comboAGV.getSelectedItem().toString());
 			System.out.println("AGV " + comboAGV.getSelectedItem().toString() + " removido");
 			
+<<<<<<< .mine
+			comboAGV.removeItem(comboAGV.getSelectedItem());
+			this.repaint();
+			
+=======
 			//Refresh
 			comboAGV.removeItem(comboAGV.getSelectedItem());
 			this.repaint();
 			
+>>>>>>> .r30
 		} else if ("removeMaq".equals(e.getActionCommand())) {
 			System.out.println("Vou remover a Maquina " + comboMaq.getSelectedItem().toString());
 			sysManager.removeMachine(comboMaq.getSelectedItem().toString());
 			System.out.println("Máquina " + comboMaq.getSelectedItem().toString() + " removida");
 			
+<<<<<<< .mine
+			comboMaq.removeItem(comboMaq.getSelectedItem());
+			this.repaint();
+			
+			
+=======
 			//Refresh
 			comboMaq.removeItem(comboMaq.getSelectedItem());
 			this.repaint();
 			
+>>>>>>> .r30
 		} else if ("addAGV".equals(e.getActionCommand())) {
 			System.out.println("Vou adiconar o AGV ");
 			//sysManager.addAgv(String agvName, String[] params);

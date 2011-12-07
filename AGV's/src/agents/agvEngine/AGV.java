@@ -33,9 +33,9 @@ public class AGV extends Agent {
 	private double currentLoad;
 	private double maxLoad;
 	private String status, agvName;
-	
+
 	private HashMap<AID, Location> machineLocation;
-	
+
 	public void setAgvProperties(int autonomy, int cost, int locationX,
 			int locationY, int velocity, double maxLoad, String status,
 			String agvName) {
@@ -64,25 +64,18 @@ public class AGV extends Agent {
 					(Double) args[5], (String) args[6], (String) args[7]);
 
 			registerAgentAtDF("Transport:" + getAgvName(), "Transport");
-			
+
 			initializeAgvContractResponder();
-			
+
 			addBehaviour(new AgvAgentSync(this));
 			addBehaviour(new AgvShutdown());
-			}
+		}
 	}
 
 	protected void shutdownAgent() {
-		try {
-			DFService.deregister(this);
-			doDelete();
-		} catch (FIPAException e) {
-			// TODO Auto-generated catch block
-			System.err.println("ERROR - Deregistering agent from DF");
-			e.printStackTrace();
-		}
+		doDelete();
 	}
-	
+
 	/**
 	 * initializes contract responder for product transport proposals from
 	 * machines
@@ -207,7 +200,7 @@ public class AGV extends Agent {
 				+ "\tlocationY = " + locationY + "\tvelocity = " + velocity
 				+ "\tmaxLoad = " + maxLoad + "\tstatus = " + status;
 	}
-	
+
 	public DFAgentDescription[] getAgentListWithService(String serviceName) {
 		DFAgentDescription dfd = new DFAgentDescription();
 		ServiceDescription sd = new ServiceDescription();
@@ -221,9 +214,9 @@ public class AGV extends Agent {
 			e.printStackTrace();
 		}
 
-//		System.out.println("agents with " + serviceName + "service:");
-//		for (DFAgentDescription a : agents)
-//			System.out.println("\t" + a.getName());
+		// System.out.println("agents with " + serviceName + "service:");
+		// for (DFAgentDescription a : agents)
+		// System.out.println("\t" + a.getName());
 
 		return agents;
 	}
