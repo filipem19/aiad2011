@@ -69,8 +69,7 @@ public class AGV extends Agent {
 			
 			addBehaviour(new AgvAgentSync(this));
 			addBehaviour(new AgvShutdown());
-		}
-
+			}
 	}
 
 	protected void shutdownAgent() {

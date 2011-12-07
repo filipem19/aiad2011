@@ -1,5 +1,6 @@
 package systemManagement;
       
+import jade.core.AID;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
@@ -340,27 +341,12 @@ public class SystemManager extends GuiAgent {
 	 * @param agvName
 	 */
 	public void removeAgv(String agvName) {
-		//TODO 
 		
-		DFAgentDescription[] agentes = getAgentListWithService("Transport");
-		for(DFAgentDescription agent : agentes)
-		{
-			
-			
-			
-			/*try {
-				DFService.deregister(this, agent);
-			} catch (FIPAException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-//		for(int i=0; i < agentes.length; i++)
-//		{
-//			if(agentes[i].getName().getLocalName().toString() == agvName)
-//			{
-//			}	*/
-		}
+		AID aID = new AID(agvName, AID.ISGUID);
+		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+		msg.setContent("TAKE_DOWN");
+		msg.addReceiver(aID);
+		send(msg);
 	}
 
 	/**
@@ -368,7 +354,12 @@ public class SystemManager extends GuiAgent {
 	 * @param machineName
 	 */
 	public void removeMachine(String machineName) {
-		//TODO 
+		
+		AID aID = new AID(machineName, AID.ISGUID);
+		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+		msg.setContent("TAKE_DOWN");
+		msg.addReceiver(aID);
+		send(msg);
 	}
 
 	/**

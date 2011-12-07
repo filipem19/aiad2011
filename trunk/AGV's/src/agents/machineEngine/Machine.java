@@ -15,6 +15,8 @@ import jade.wrapper.ControllerException;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import agents.agvEngine.AgvShutdown;
+
 import negotiationEngine.MachineContractResponder;
 import products.Operation;
 import products.Product;
@@ -52,6 +54,19 @@ public class Machine extends Agent {
 				e.printStackTrace();
 			}
 //			System.out.println(toString());
+			
+			addBehaviour(new MachineShutdown());
+		}
+	}
+	
+	protected void shutdownAgent() {
+		try {
+			DFService.deregister(this);
+			doDelete();
+		} catch (FIPAException e) {
+			// TODO Auto-generated catch block
+			System.err.println("ERROR - Deregistering agent from DF");
+			e.printStackTrace();
 		}
 	}
 

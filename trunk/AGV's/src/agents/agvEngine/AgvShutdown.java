@@ -13,12 +13,23 @@ public class AgvShutdown extends CyclicBehaviour{
 
 	@Override
 	public void action() {
-		ACLMessage msg = myAgent.receive(MessageTemplate.MatchPerformative(ACLMessage.INFORM));
+		/*ACLMessage msg = myAgent.receive(MessageTemplate.MatchPerformative(ACLMessage.INFORM));
 		ACLMessage msg2 = new ACLMessage(ACLMessage.INFORM);
 		msg2.addReceiver(myAgent.getAID());
 		if(msg.getContent().compareTo("TAKE_DOWN") == 0){
 			((AGV)myAgent).shutdownAgent();
-		}
+		}*/
 		
+		ACLMessage msg = myAgent.receive(MessageTemplate.MatchPerformative(ACLMessage.INFORM));
+		if(msg != null){
+			System.out.print("entrei \n");
+			if(msg.getContent().compareTo("TAKE_DOWN") == 0){
+				((AGV)myAgent).shutdownAgent();
+				System.out.print("vou-me desligar " + myAgent.getName() + "\n");
+			}
+		} else {
+			System.out.print("else \n");
+			block();
+		}
 	}
 }
