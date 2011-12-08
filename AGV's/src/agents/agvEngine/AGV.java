@@ -1,8 +1,6 @@
 package agents.agvEngine;
 
-import jade.core.AID;
 import jade.core.Agent;
-import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPANames;
@@ -10,8 +8,6 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import jade.wrapper.ControllerException;
-import jade.wrapper.StaleProxyException;
 
 import java.util.HashMap;
 
@@ -27,22 +23,21 @@ public class AGV extends Agent {
 
 	private int autonomy;
 	private int cost;
-	private int locationX;
-	private int locationY;
+	private Location location;
+	
 	private int velocity;
 	private double currentLoad;
 	private double maxLoad;
 	private String status, agvName;
 
-	private HashMap<AID, Location> machineLocation;
+	private HashMap<String, Location> machineLocation = new HashMap<String, Location>();
 
 	public void setAgvProperties(int autonomy, int cost, int locationX,
 			int locationY, int velocity, double maxLoad, String status,
 			String agvName) {
 		this.autonomy = autonomy;
 		this.cost = cost;
-		this.locationX = locationX;
-		this.locationY = locationY;
+		location = new Location(locationX, locationY);
 		this.velocity = velocity;
 		this.currentLoad = 0;
 		this.maxLoad = maxLoad;
@@ -67,8 +62,9 @@ public class AGV extends Agent {
 
 			initializeAgvContractResponder();
 
-			addBehaviour(new AgvAgentSync(this));
-			addBehaviour(new AgvShutdown());
+//			addBehaviour(new AgvAgentSync(this));
+			addBehaviour(new AgvInformMessageHandler(this));
+			addBehaviour(new AgvInformRefHandler(this));
 		}
 	}
 
@@ -142,19 +138,19 @@ public class AGV extends Agent {
 	}
 
 	public int getLocationX() {
-		return locationX;
+		return location.getX();
 	}
 
 	public void setLocationX(int locationX) {
-		this.locationX = locationX;
+		location.setX(locationX);
 	}
 
 	public int getLocationY() {
-		return locationY;
+		return location.getY();
 	}
 
 	public void setLocationY(int locationY) {
-		this.locationY = locationY;
+		location.setY(locationY);
 	}
 
 	public int getVelocity() {
@@ -193,11 +189,19 @@ public class AGV extends Agent {
 		return this.agvName;
 	}
 
+	public Location getLocation() {
+		return location;
+	}
+
+	public void setLocation(Location location) {
+		this.location = location;
+	}
+
 	@Override
 	public String toString() {
 		return "AGV (" + getAgvName() + "): \n\tautonomy = " + autonomy
-				+ "\tcost = " + cost + "\tlocationX = " + locationX
-				+ "\tlocationY = " + locationY + "\tvelocity = " + velocity
+				+ "\tcost = " + cost + "\tlocationX = " + location.getX()
+				+ "\tlocationY = " + location.getY() + "\tvelocity = " + velocity
 				+ "\tmaxLoad = " + maxLoad + "\tstatus = " + status;
 	}
 
@@ -221,11 +225,11 @@ public class AGV extends Agent {
 		return agents;
 	}
 
-	public HashMap<AID, Location> getMachineLocation() {
+	public HashMap<String, Location> getMachineLocation() {
 		return machineLocation;
 	}
 
-	public void setMachineLocation(HashMap<AID, Location> machineLocation) {
+	public void setMachineLocation(HashMap<String, Location> machineLocation) {
 		this.machineLocation = machineLocation;
 	}
 }

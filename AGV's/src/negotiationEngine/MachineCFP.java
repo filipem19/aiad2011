@@ -8,26 +8,26 @@ import java.util.HashMap;
 import products.Product;
 import systemManagement.SystemManager;
 
-public class MachineCFP implements Serializable{
+public class MachineCFP implements Serializable {
 
 	private static final long serialVersionUID = -2312982920303681093L;
 
 	private Product product;
 	private AID origin, destination;
 	private HashMap<AID, Integer> machineCostMap;
-	
+
 	private SystemManager.ObjectType type;
-	
+
 	public MachineCFP(Product product, AID origin) {
 		// TODO Auto-generated constructor stub
 		this.product = product;
 		this.origin = origin;
 	}
-	
+
 	public Product getProduct() {
 		return product;
 	}
-	
+
 	public SystemManager.ObjectType getType() {
 		return type;
 	}
@@ -43,7 +43,7 @@ public class MachineCFP implements Serializable{
 	public AID getDestination() {
 		return destination;
 	}
-	
+
 	public void setDestination(AID destination) {
 		this.destination = destination;
 	}
@@ -54,6 +54,26 @@ public class MachineCFP implements Serializable{
 
 	public void setMachineCostMap(HashMap<AID, Integer> machineCostMap) {
 		this.machineCostMap = machineCostMap;
+	}
+
+	@Override
+	public String toString() {
+		if (machineCostMap != null)
+			return "origin = " + getOrigin().getLocalName() 
+				+ " objecttype = " + getType() 
+				+ " costs: " + getMachineCostMap().keySet();
+		else
+			return "origin = " + getOrigin().getLocalName() + " destination: "
+			+ getDestination().getLocalName() + " objecttype = "
+			+ getType();
+	}
+
+	protected MachineCFP clone() {
+		MachineCFP mcfp = new MachineCFP(this.getProduct(), this.getOrigin());
+		mcfp.setDestination(this.getDestination());
+		mcfp.setType(this.getType());
+		mcfp.setMachineCostMap(this.getMachineCostMap());
+		return mcfp;
 	}
 
 }

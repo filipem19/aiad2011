@@ -6,9 +6,12 @@ import jade.lang.acl.UnreadableException;
 import jade.proto.ContractNetInitiator;
 
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Vector;
 
-public class MachineContractInitiator extends ContractNetInitiator{
+import sun.security.action.GetLongAction;
+
+public class MachineContractInitiator extends ContractNetInitiator {
 
 	private static final long serialVersionUID = 4913533665490479921L;
 
@@ -16,42 +19,43 @@ public class MachineContractInitiator extends ContractNetInitiator{
 		super(a, cfp);
 	}
 
+	private HashMap<String, MachineCFP> machineResponse = new HashMap<String, MachineCFP>(),
+			agvResponse = new HashMap<String, MachineCFP>();
+
 	@Override
 	protected void handleAllResponses(Vector responses, Vector acceptances) {
-		System.out.println(myAgent.getLocalName() +" : handle all responses");
+		System.out.println(myAgent.getLocalName() + " : handle all responses");
 		Enumeration e = responses.elements();
-//		while(e.hasMoreElements()){
-//			ACLMessage msg = (ACLMessage) e.nextElement();
-//			System.out.println(myAgent.getLocalName()+ "message received(conversationId:" + msg.getConversationId() + "): " + msg);	
-//		}
-	}
-	
-	@Override
-	protected void handlePropose(ACLMessage propose, Vector acceptances) {
-		// TODO Auto-generated method stub
-		MachineCFP content = null;
-		
-		try {
-			content = (MachineCFP) propose.getContentObject();
-		} catch (UnreadableException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		if(content == null)
-			return;
-		System.out.println(myAgent.getAID().getLocalName() + " received a propose from " + propose.getSender().getLocalName() + ": " + content);
-		Enumeration e = acceptances.elements();
-		while(e.hasMoreElements()){
+		while (e.hasMoreElements()) {
 			ACLMessage msg = (ACLMessage) e.nextElement();
-			System.out.println("\t" + msg);
+			try {
+				if (msg.getContentObject() != null) {
+					MachineCFP content = (MachineCFP) msg.getContentObject();
+					System.out.println(myAgent.getLocalName() + ": " + content);
+					switch (content.getType()) {
+					case Agv:
+						agvResponse.put(msg.getSender().getLocalName(), content);
+						break;
+					case Machine:
+						machineResponse.put(msg.getSender().getLocalName(), content);
+						break;
+					default:
+						System.err.println("Error: bad message received");
+						break;
+					}
+				}
+			} catch (UnreadableException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 	}
-	
-	public boolean finnished(){
+
+	public boolean finnished() {
 		return true;
 	}
-	
-	protected int evaluate(){
+
+	protected int evaluate() {
 		return 0;
 	}
 }

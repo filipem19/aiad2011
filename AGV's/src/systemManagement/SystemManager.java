@@ -6,7 +6,6 @@ import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
-import jade.gui.DFAgentDscDlg;
 import jade.gui.GuiAgent;
 import jade.gui.GuiEvent;
 import jade.lang.acl.ACLMessage;
@@ -43,14 +42,39 @@ public class SystemManager extends GuiAgent {
 
 	private HashMap<String, Operation> existingOperations = new HashMap<String, Operation>();
 	private HashMap<String, Product> existingProducts = new HashMap<String, Product>();
+	private HashMap<String, Location> machineMap = new HashMap<String, Location>();
 
 	transient protected SystemManagerGUI myGui; // The gui
 
 	@Override
 	protected void setup() {
 		loadProgramData("ProgramData");
+		sendMachineMap();
 		myGui = new SystemManagerGUI(this);
 		testFunctions();
+	}
+
+	private void sendMachineMap() {
+		ACLMessage machineMapMessage = new ACLMessage(ACLMessage.INFORM_REF);
+		
+		try {
+			machineMapMessage.setContentObject(machineMap);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		for(DFAgentDescription agv: getAgentListWithService("Transport")){
+			machineMapMessage.addReceiver(agv.getName());
+		}
+//		System.out.println(getLocalName() + ": " + machineMapMessage);
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		send(machineMapMessage);
 	}
 
 	private void testFunctions() {
@@ -288,6 +312,7 @@ public class SystemManager extends GuiAgent {
 				AgentController ac = getContainerController().createNewAgent(
 						machineName, "agents.machineEngine.Machine", args);
 				ac.start();
+				machineMap.put(ac.getName(), new Location(locationX, locationY));
 			} catch (StaleProxyException e) {
 				// TODO Auto-generated catch block
 				System.err.println("Error - problem creating agent ("
@@ -363,6 +388,8 @@ public class SystemManager extends GuiAgent {
 		msg.setContent(TAKE_DOWN);
 		msg.addReceiver(aID);
 		send(msg);
+		machineMap.remove(aID.getName());
+		sendMachineMap();
 	}
 
 	/**
@@ -381,6 +408,7 @@ public class SystemManager extends GuiAgent {
 	 */
 	public void addMachine(String machineName, String[] params) {
 		createMachineWithProperties(machineName, params);
+		sendMachineMap();
 	}
 
 	public HashMap<String, Operation> getExistingOperations() {

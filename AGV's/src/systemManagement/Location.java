@@ -36,4 +36,8 @@ public class Location implements Serializable{
 		return Math.sqrt(Math.pow((destination.getX() - this.getX()),2) + Math.pow(destination.getY() - this.getY(),2));
 	}
 	
+	public static double distanceTo(Location origin ,Location destination){
+		return Math.sqrt(Math.pow((destination.getX() - origin.getX()),2) + Math.pow(destination.getY() - origin.getY(),2));
+	}
+	
 }
