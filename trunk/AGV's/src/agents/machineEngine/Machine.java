@@ -1,7 +1,6 @@
 package agents.machineEngine;
 
 import jade.core.Agent;
-import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPANames;
@@ -9,7 +8,6 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import jade.lang.acl.UnreadableException;
 import jade.wrapper.ControllerException;
 
 import java.util.Enumeration;
@@ -41,19 +39,14 @@ public class Machine extends Agent {
 		if (args.length < 3) {
 			System.out.println("takedown");
 			takeDown();
-		} else {
-			setMachineProperties((Integer) args[0], (Integer) args[1],
-					this.getName(), (Vector) args[2]);
-			initializeAgent();
-			try {
-				getContainerController().start();
-			} catch (ControllerException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			addBehaviour(new MachineShutdown(this));
+			return;
 		}
+		
+		setMachineProperties((Integer) args[0], (Integer) args[1],
+				this.getName(), (Vector) args[2]);
+		initializeAgent();
+		
+
 	}
 
 	protected void shutdownAgent() {
@@ -70,48 +63,15 @@ public class Machine extends Agent {
 	}
 
 	public void initializeAgent() {
-//		testFunction();
+
+		addBehaviour(new MachineInformMessageHandler(this));
+
 		registerAgentAtDF("ProcessProduct:" + getMachineName(),
 				"ProcessProduct");
 
 		/* Starting FIPA contract Responder Protocols */
 		machineContractResponder();
-
-	}
-
-	private void testFunction() {
-		/* test for contract behaviour */
-		addBehaviour(new CyclicBehaviour(this) {
-
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = -8611591964691930759L;
-
-			public void action() {
-				ACLMessage msg = receive(MessageTemplate
-						.MatchPerformative(ACLMessage.INFORM));
-				if (msg != null) {
-					if(msg.getContent().compareTo("TAKE_DOWN") != 0){
-						Product p = null;
-						try {
-							p = (Product) msg.getContentObject();
-							System.out.println(getLocalName()
-									+ ": messageObjectContent() = " + p);
-						} catch (UnreadableException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						if (p != null) {
-							setProductAtWork(p);
-						}	
-					}
-				}
-				block();
-			}
-		});
-		/*-----------*/
-
+		
 	}
 
 	/**
