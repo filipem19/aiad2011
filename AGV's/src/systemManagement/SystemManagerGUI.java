@@ -192,37 +192,39 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 		JLabel labelOperacoes = new JLabel("Operações Máquina");
 			
 		//Caixilho Adicionar
-		adicionar.add(labelNomeAGV);
-		adicionar.add(nomeAGVText);
-		adicionar.add(labelAutonomiaAGV);
-		adicionar.add(autonomiaAGVText);
-		adicionar.add(labelCustoAGV);
-		adicionar.add(custoAGVText);
-		adicionar.add(labelXAGV);
-		adicionar.add(xAGVText);
-		adicionar.add(labelYAGV);
-		adicionar.add(yAGVText);
-		adicionar.add(labelVelocidadeAGV);
-		adicionar.add(velocidadeAGVText);
-		adicionar.add(labelCargaMaxAGV);
-		adicionar.add(cargaMaxAGVText);
-		adicionar.add(labelEstadoAGV);
-		adicionar.add(estadosAGV);
-		adicionar.add(addAGV);
+		agv.add(labelNomeAGV);
+		agv.add(nomeAGVText);
+		agv.add(labelAutonomiaAGV);
+		agv.add(autonomiaAGVText);
+		agv.add(labelCustoAGV);
+		agv.add(custoAGVText);
+		agv.add(labelXAGV);
+		agv.add(xAGVText);
+		agv.add(labelYAGV);
+		agv.add(yAGVText);
+		agv.add(labelVelocidadeAGV);
+		agv.add(velocidadeAGVText);
+		agv.add(labelCargaMaxAGV);
+		agv.add(cargaMaxAGVText);
+		agv.add(labelEstadoAGV);
+		agv.add(estadosAGV);
+		agv.add(addAGV);
 		
-		adicionar.add(labelNomeMaq);
-		adicionar.add(nomeMaqText);
-		adicionar.add(labelXMaq);
-		adicionar.add(xMaqText);
-		adicionar.add(labelYMaq);
-		adicionar.add(yMaqText);
-		adicionar.add(labelOperacoes);
+		maq.add(labelNomeMaq);
+		maq.add(nomeMaqText);
+		maq.add(labelXMaq);
+		maq.add(xMaqText);
+		maq.add(labelYMaq);
+		maq.add(yMaqText);
+		maq.add(labelOperacoes);
 //		adicionar.add(OperacoesText);
 		this.operationList = createList(sysManager.getExistingOperations());
 		this.operationList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-		adicionar.add(operationList);
-		adicionar.add(addMaq);
+		maq.add(operationList);
+		maq.add(addMaq);
 		
+		adicionar.add(agv);
+		adicionar.add(maq);
 		opcoes.add(adicionar, BorderLayout.NORTH);
 				
 		//Janela Principal
