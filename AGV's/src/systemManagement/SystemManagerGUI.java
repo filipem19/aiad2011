@@ -66,6 +66,7 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 //	JTextField OperacoesText = new JTextField();
 	JList operationList;
 	
+
 	public SystemManagerGUI(SystemManager sysManager) {
 		this.sysManager = sysManager;
 		initializeWindowPreferences();
@@ -99,6 +100,10 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 		JPanel mapaOficina = new JPanel();
 		mapaOficina.setBackground(Color.ORANGE);
 		mapaOficina.setSize(400, 500);
+		
+		// Adicinar o mapa da localização dos Agentes.
+		mapa planta = new mapa();
+		mapaOficina.add(planta);
 		
 		//Opcoes de Adicionar e Remover
 		GridBagLayout opcoesLayout = new GridBagLayout();
@@ -265,7 +270,6 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 			//Refresh
 			comboAGV.removeItem(comboAGV.getSelectedItem());
 			
-
 		} else if ("removeMaq".equals(e.getActionCommand())) {
 			if(comboMaq.getSelectedItem() == null)
 				return;
@@ -277,7 +281,6 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 			//Refresh
 			comboMaq.removeItem(comboMaq.getSelectedItem());
 			
-
 		} else if ("addAGV".equals(e.getActionCommand())) {
 			System.out.println("Vou adiconar o AGV " + nomeAGVText.getText());
 			String[] params = {autonomiaAGVText.getText(), custoAGVText.getText(), xAGVText.getText(), yAGVText.getText(), velocidadeAGVText.getText(), cargaMaxAGVText.getText(), estadosAGV.getSelectedItem().toString()};
