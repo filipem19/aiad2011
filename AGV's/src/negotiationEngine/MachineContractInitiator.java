@@ -9,8 +9,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Vector;
 
-import sun.security.action.GetLongAction;
-
 public class MachineContractInitiator extends ContractNetInitiator {
 
 	private static final long serialVersionUID = 4913533665490479921L;

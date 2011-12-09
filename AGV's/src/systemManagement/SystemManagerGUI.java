@@ -4,10 +4,13 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -16,6 +19,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
@@ -57,11 +61,27 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 	JTextField nomeMaqText = new JTextField();
 	JTextField xMaqText = new JTextField();
 	JTextField yMaqText = new JTextField();
-	JTextField OperacoesText = new JTextField();
+//	JTextField OperacoesText = new JTextField();
+	JList operationList;
 	
 	public SystemManagerGUI(SystemManager sysManager) {
 		this.sysManager = sysManager;
 		initializeWindowPreferences();
+	}
+
+	
+	private JPanel createJpanelWithComponents(String label, int lines, int rows, Vector<Component> components){
+		JPanel opcoes = new JPanel(new GridLayout(lines,rows));
+		if(label != null){
+			
+		}
+		else{
+			
+		}
+		
+		for(Component c: components)
+			opcoes.add(c);
+		return opcoes;
 	}
 	
 	private void initializeWindowPreferences(){
@@ -79,9 +99,13 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 		mapaOficina.setSize(400, 500);
 		
 		//Opcoes de Adicionar e Remover
-		JPanel opcoes = new JPanel(new BorderLayout());
+		JPanel opcoes = new JPanel(new GridLayout(2,1));
 		JPanel adicionar = new JPanel(new BorderLayout ());
 		JPanel remover = new JPanel(new BorderLayout ());
+		
+		JPanel agv = new JPanel(new BorderLayout ());
+		JPanel maq = new JPanel(new BorderLayout ());
+		
 		remover.setLayout(new BoxLayout(remover, BoxLayout.PAGE_AXIS));
 		adicionar.setLayout(new BoxLayout(adicionar, BoxLayout.PAGE_AXIS));
 					
@@ -135,7 +159,7 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 		remover.add(comboMaq);
 		remover.add(removeMaq);
 		
-		opcoes.add(remover, BorderLayout.SOUTH);
+		opcoes.add(remover, BorderLayout.EAST);
 		
 		//Adicionar AGV
 		//JButton
@@ -193,7 +217,10 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 		adicionar.add(labelYMaq);
 		adicionar.add(yMaqText);
 		adicionar.add(labelOperacoes);
-		adicionar.add(OperacoesText);
+//		adicionar.add(OperacoesText);
+		this.operationList = createList(sysManager.getExistingOperations());
+		this.operationList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+		adicionar.add(operationList);
 		adicionar.add(addMaq);
 		
 		opcoes.add(adicionar, BorderLayout.NORTH);
@@ -211,36 +238,35 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 		//---   ---
 	}
 
+	private JList createList(HashMap<String, Operation> existingOperations) {
+		JList list = new JList(new OperationList(existingOperations));
+		return list;
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
 		if ("removeAGV".equals(e.getActionCommand())) {
+			if(comboAGV.getSelectedItem() == null)
+				return;
 			System.out.println("Vou remover o AGV " + comboAGV.getSelectedItem().toString());
 			sysManager.removeAgv(comboAGV.getSelectedItem().toString());
 			System.out.println("AGV " + comboAGV.getSelectedItem().toString() + " removido");
 			
-
-			comboAGV.removeItem(comboAGV.getSelectedItem());
-			this.repaint();
-			
-
 			//Refresh
 			comboAGV.removeItem(comboAGV.getSelectedItem());
-			this.repaint();
 			
 
 		} else if ("removeMaq".equals(e.getActionCommand())) {
+			if(comboMaq.getSelectedItem() == null)
+				return;
+			
 			System.out.println("Vou remover a Maquina " + comboMaq.getSelectedItem().toString());
 			sysManager.removeMachine(comboMaq.getSelectedItem().toString());
 			System.out.println("Máquina " + comboMaq.getSelectedItem().toString() + " removida");
 			
-
-			comboMaq.removeItem(comboMaq.getSelectedItem());
-			this.repaint();
-
 			//Refresh
 			comboMaq.removeItem(comboMaq.getSelectedItem());
-			this.repaint();
 			
 
 		} else if ("addAGV".equals(e.getActionCommand())) {
@@ -261,24 +287,35 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 			velocidadeAGVText.setText("");
 			cargaMaxAGVText.setText("");
 			
-			this.repaint();
 			
 		} else if ("addMaq".equals(e.getActionCommand())) {
 			System.out.println("Vou adiconar a Máquina " + nomeMaqText.getText());
-			String[] params = {xMaqText.getText(), yMaqText.getText(), OperacoesText.getText()};
+			Vector<String> selectedOperations = new Vector<String>();
+			for(Object o: operationList.getSelectedValues()){
+				Operation oper = (Operation)o;
+				selectedOperations.add(oper.getOperationName()); 
+			}
+			
+			String[] params = new String[selectedOperations.size() + 2];
+			params[0] = xMaqText.getText();
+			params[1] = yMaqText.getText();
+			for(int i = 0; i< selectedOperations.size();i++){
+				System.out.println(i);
+				params[i+2] = selectedOperations.get(i);
+			}
 			sysManager.addMachine(nomeMaqText.getText(), params);
 			System.out.println("Máquina " + nomeMaqText.getText() + " adicionada");
 			
 			//Refresh
-			comboMaq.addItem(nomeMaqText.getText());
+			comboMaq.addItem(nomeMaqText.getText()); //para aparecer na lista de remover
 			
 			//Colocar caixas de texto vazias para nova adicao
 			nomeMaqText.setText("");
 			xMaqText.setText("");
 			yMaqText.setText("");
-			OperacoesText.setText("");
 			
-			this.repaint();
+			
 		} 
+		this.repaint();
 	}
 }
