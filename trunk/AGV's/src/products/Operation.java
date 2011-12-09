@@ -43,6 +43,7 @@ public class Operation implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "Operation (" + name + "):\n\tduration = " + duration + "\n\tdeltaweight = " + deltaWeight;
+		return getOperationName();
+//		return "Operation (" + name + "):\n\tduration = " + duration + "\n\tdeltaweight = " + deltaWeight;
 	}
 }

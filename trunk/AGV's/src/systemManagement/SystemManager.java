@@ -1,5 +1,5 @@
 package systemManagement;
-      
+
 import jade.core.AID;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.DFService;
@@ -28,9 +28,9 @@ import products.Product;
 
 public class SystemManager extends GuiAgent {
 
-	//Constants
+	// Constants
 	public final static String TAKE_DOWN = "TAKE_DOWN";
-	
+
 	/**
 	 * 
 	 */
@@ -49,31 +49,32 @@ public class SystemManager extends GuiAgent {
 	@Override
 	protected void setup() {
 		loadProgramData("ProgramData");
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		sendMachineMap();
 		myGui = new SystemManagerGUI(this);
-		testFunctions();
+//		testFunctions();
 	}
 
 	private void sendMachineMap() {
 		ACLMessage machineMapMessage = new ACLMessage(ACLMessage.INFORM_REF);
-		
+
 		try {
 			machineMapMessage.setContentObject(machineMap);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		for(DFAgentDescription agv: getAgentListWithService("Transport")){
+
+		for (DFAgentDescription agv : getAgentListWithService("Transport")) {
 			machineMapMessage.addReceiver(agv.getName());
 		}
-//		System.out.println(getLocalName() + ": " + machineMapMessage);
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		// System.out.println(getLocalName() + ": " + machineMapMessage);
 		send(machineMapMessage);
 	}
 
@@ -312,7 +313,8 @@ public class SystemManager extends GuiAgent {
 				AgentController ac = getContainerController().createNewAgent(
 						machineName, "agents.machineEngine.Machine", args);
 				ac.start();
-				machineMap.put(ac.getName(), new Location(locationX, locationY));
+				machineMap
+						.put(ac.getName(), new Location(locationX, locationY));
 			} catch (StaleProxyException e) {
 				// TODO Auto-generated catch block
 				System.err.println("Error - problem creating agent ("
@@ -363,13 +365,13 @@ public class SystemManager extends GuiAgent {
 
 		return agents;
 	}
-	
+
 	/**
 	 * 
 	 * @param agvName
 	 */
 	public void removeAgv(String agvName) {
-		
+
 		AID aID = new AID(agvName, AID.ISLOCALNAME);
 		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
 		msg.setContent(TAKE_DOWN);
@@ -382,20 +384,22 @@ public class SystemManager extends GuiAgent {
 	 * @param machineName
 	 */
 	public void removeMachine(String machineName) {
-		
+
 		AID aID = new AID(machineName, AID.ISLOCALNAME);
+		machineMap.remove(aID.getName());
+		sendMachineMap();
 		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
 		msg.setContent(TAKE_DOWN);
 		msg.addReceiver(aID);
 		send(msg);
-		machineMap.remove(aID.getName());
-		sendMachineMap();
+		
 	}
 
 	/**
 	 * 
 	 * @param agvName
-	 * @param params [autonomy cost locationX locationY velocity maxLoad status]
+	 * @param params
+	 *            [autonomy cost locationX locationY velocity maxLoad status]
 	 */
 	public void addAgv(String agvName, String[] params) {
 		createAgvWithProperties(agvName, params);
@@ -404,7 +408,8 @@ public class SystemManager extends GuiAgent {
 	/**
 	 * 
 	 * @param machineName
-	 * @param params [locationX locationY [availableOperations]*]
+	 * @param params
+	 *            [locationX locationY [availableOperations]*]
 	 */
 	public void addMachine(String machineName, String[] params) {
 		createMachineWithProperties(machineName, params);
