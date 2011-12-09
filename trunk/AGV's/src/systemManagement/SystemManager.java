@@ -50,7 +50,7 @@ public class SystemManager extends GuiAgent {
 	protected void setup() {
 		loadProgramData("ProgramData");
 		try {
-			Thread.sleep(5000);
+			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -168,6 +168,12 @@ public class SystemManager extends GuiAgent {
 		}
 	}
 
+	/**
+	 * 
+	 * @param strLine 
+	 * @param 
+	 * @return
+	 */
 	private ObjectType decodeLine(String strLine, ObjectType objectType) {
 		String[] parts = strLine.split(":");
 		if (parts.length == 1) {

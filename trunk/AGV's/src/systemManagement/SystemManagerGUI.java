@@ -7,6 +7,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -99,7 +101,9 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 		mapaOficina.setSize(400, 500);
 		
 		//Opcoes de Adicionar e Remover
-		JPanel opcoes = new JPanel(new GridLayout(2,1));
+		GridBagLayout opcoesLayout = new GridBagLayout();
+		JPanel opcoes = new JPanel(opcoesLayout);
+		
 		JPanel adicionar = new JPanel(new BorderLayout ());
 		JPanel remover = new JPanel(new BorderLayout ());
 		
@@ -159,7 +163,7 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 		remover.add(comboMaq);
 		remover.add(removeMaq);
 		
-		opcoes.add(remover, BorderLayout.EAST);
+//		opcoes.add(remover, BorderLayout.EAST);
 		
 		//Adicionar AGV
 		//JButton
@@ -192,41 +196,44 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 		JLabel labelOperacoes = new JLabel("Operações Máquina");
 			
 		//Caixilho Adicionar
-		agv.add(labelNomeAGV);
-		agv.add(nomeAGVText);
-		agv.add(labelAutonomiaAGV);
-		agv.add(autonomiaAGVText);
-		agv.add(labelCustoAGV);
-		agv.add(custoAGVText);
-		agv.add(labelXAGV);
-		agv.add(xAGVText);
-		agv.add(labelYAGV);
-		agv.add(yAGVText);
-		agv.add(labelVelocidadeAGV);
-		agv.add(velocidadeAGVText);
-		agv.add(labelCargaMaxAGV);
-		agv.add(cargaMaxAGVText);
-		agv.add(labelEstadoAGV);
-		agv.add(estadosAGV);
-		agv.add(addAGV);
+		adicionar.add(labelNomeAGV);
+		adicionar.add(nomeAGVText);
+		adicionar.add(labelAutonomiaAGV);
+		adicionar.add(autonomiaAGVText);
+		adicionar.add(labelCustoAGV);
+		adicionar.add(custoAGVText);
+		adicionar.add(labelXAGV);
+		adicionar.add(xAGVText);
+		adicionar.add(labelYAGV);
+		adicionar.add(yAGVText);
+		adicionar.add(labelVelocidadeAGV);
+		adicionar.add(velocidadeAGVText);
+		adicionar.add(labelCargaMaxAGV);
+		adicionar.add(cargaMaxAGVText);
+		adicionar.add(labelEstadoAGV);
+		adicionar.add(estadosAGV);
+		adicionar.add(addAGV);
 		
-		maq.add(labelNomeMaq);
-		maq.add(nomeMaqText);
-		maq.add(labelXMaq);
-		maq.add(xMaqText);
-		maq.add(labelYMaq);
-		maq.add(yMaqText);
-		maq.add(labelOperacoes);
+		adicionar.add(labelNomeMaq);
+		adicionar.add(nomeMaqText);
+		adicionar.add(labelXMaq);
+		adicionar.add(xMaqText);
+		adicionar.add(labelYMaq);
+		adicionar.add(yMaqText);
+		adicionar.add(labelOperacoes);
 //		adicionar.add(OperacoesText);
 		this.operationList = createList(sysManager.getExistingOperations());
 		this.operationList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-		maq.add(operationList);
-		maq.add(addMaq);
+		adicionar.add(operationList);
+		adicionar.add(addMaq);
 		
-		adicionar.add(agv);
-		adicionar.add(maq);
-		opcoes.add(adicionar, BorderLayout.NORTH);
-				
+		GridBagConstraints constraint = new GridBagConstraints();
+		constraint.fill = GridBagConstraints.HORIZONTAL;
+		constraint.weighty = 10;
+		opcoes.add(adicionar,constraint);
+		constraint.weighty=200;
+		opcoes.add(remover,constraint);
+		
 		//Janela Principal
 		JSplitPane janela = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, mapaOficina, opcoes);
 		Dimension minimumSize = new Dimension(200, 500);
