@@ -20,14 +20,12 @@ public class MachineInformMessageHandler extends CyclicBehaviour {
 	@Override
 	public void action() {
 
-		ACLMessage msg = myAgent.receive(MessageTemplate
-				.MatchPerformative(ACLMessage.INFORM));
-
+		ACLMessage msg = myAgent.receive(MessageTemplate.MatchPerformative(ACLMessage.INFORM_IF));
 		if (msg != null) {
-			System.out.println(myAgent.getLocalName() + ": msg > " + msg
-					+ " -> class = " + myAgent.getClass());
-			if (msg.getContent().compareTo("TAKE_DOWN") == 0) {
-				System.out.println(myAgent.getLocalName() + "message : "
+//			System.out.println(myAgent.getLocalName() + ": msg > " + msg
+//					+ " -> class = " + myAgent.getClass());
+			if (msg.getContent() != null && msg.getContent().compareTo("TAKE_DOWN") == 0 && msg.getConversationId() == null) {
+				System.out.println(myAgent.getLocalName() + "message (" + msg.getConversationId() + "): "
 						+ msg.getContent());
 				((Machine) myAgent).shutdownAgent();
 				System.out.print("vou-me desligar " + myAgent.getName() + "\n");

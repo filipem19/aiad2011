@@ -8,7 +8,7 @@ import jade.lang.acl.ACLMessage;
 import java.io.IOException;
 import java.util.Date;
 
-import negotiationEngine.MachineCFP;
+import negotiationEngine.Cfp;
 import negotiationEngine.MachineContractInitiator;
 import products.Operation;
 import products.Product;
@@ -34,14 +34,14 @@ public class ProcessProductBehaviour extends SimpleBehaviour {
 	@Override
 	public void action() {
 		Operation op = product.getCurrentOperation();
-		System.out.println(myAgent.getLocalName() + ": operation: " + op
-				+ "\nMachine: " + machine);
+//		System.out.println(myAgent.getLocalName() + ": operation: " + op
+//				+ "\nMachine: " + machine);
 		while (op != null && machine.isOperationAvailable(op)) {
 			block(op.getOperationDuration());
 			op = product.nextOperation();
-			System.out.println(myAgent.getLocalName()
-					+ ": Processing Product (" + op.getOperationDuration()
-					* 1000 + ")");
+//			System.out.println(myAgent.getLocalName()
+//					+ ": Processing Product (" + op.getOperationDuration()
+//					* 1000 + ")");
 			block(op.getOperationDuration() * 1000);
 		}
 		finnished = true;
@@ -55,7 +55,7 @@ public class ProcessProductBehaviour extends SimpleBehaviour {
 		ACLMessage cfp = new ACLMessage(ACLMessage.CFP);
 		cfp.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
 
-		MachineCFP cfpContent = new MachineCFP(product, myAgent.getAID());
+		Cfp cfpContent = new Cfp(product, myAgent.getAID());
 		
 		try {
 			cfp.setContentObject(cfpContent);
@@ -69,7 +69,7 @@ public class ProcessProductBehaviour extends SimpleBehaviour {
 		
 		cfp.removeReceiver(myAgent.getAID());
 		
-		cfp.setReplyByDate(new Date(System.currentTimeMillis() + 7000));
+//		cfp.setReplyByDate(new Date(System.currentTimeMillis() + 7000));
 		myAgent.addBehaviour(new MachineContractInitiator(myAgent, cfp));
 		
 	}

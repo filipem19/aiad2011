@@ -8,17 +8,18 @@ import java.util.HashMap;
 import products.Product;
 import systemManagement.SystemManager;
 
-public class MachineCFP implements Serializable {
+public class Cfp implements Serializable {
 
 	private static final long serialVersionUID = -2312982920303681093L;
 
 	private Product product;
-	private AID origin, destination;
+	private AID origin, destination, agv;
+
 	private HashMap<AID, Integer> machineCostMap;
 
 	private SystemManager.ObjectType type;
 
-	public MachineCFP(Product product, AID origin) {
+	public Cfp(Product product, AID origin) {
 		// TODO Auto-generated constructor stub
 		this.product = product;
 		this.origin = origin;
@@ -56,6 +57,14 @@ public class MachineCFP implements Serializable {
 		this.machineCostMap = machineCostMap;
 	}
 
+	public AID getAgv() {
+		return agv;
+	}
+
+	public void setAgv(AID agv) {
+		this.agv = agv;
+	}
+
 	@Override
 	public String toString() {
 		if (machineCostMap != null)
@@ -68,8 +77,8 @@ public class MachineCFP implements Serializable {
 			+ getType();
 	}
 
-	protected MachineCFP clone() {
-		MachineCFP mcfp = new MachineCFP(this.getProduct(), this.getOrigin());
+	protected Cfp clone() {
+		Cfp mcfp = new Cfp(this.getProduct(), this.getOrigin());
 		mcfp.setDestination(this.getDestination());
 		mcfp.setType(this.getType());
 		mcfp.setMachineCostMap(this.getMachineCostMap());

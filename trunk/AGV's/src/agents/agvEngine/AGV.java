@@ -63,7 +63,7 @@ public class AGV extends Agent {
 			initializeAgvContractResponder();
 
 //			addBehaviour(new AgvAgentSync(this));
-			addBehaviour(new AgvInformMessageHandler(this));
+			addBehaviour(new AgvInformIfMessageHandler(this));
 			addBehaviour(new AgvInformRefHandler(this));
 		}
 	}

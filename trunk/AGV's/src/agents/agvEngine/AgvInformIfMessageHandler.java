@@ -4,7 +4,7 @@ import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 
-public class AgvInformMessageHandler extends CyclicBehaviour{
+public class AgvInformIfMessageHandler extends CyclicBehaviour{
 
 	/**
 	 * 
@@ -12,7 +12,7 @@ public class AgvInformMessageHandler extends CyclicBehaviour{
 	private static final long serialVersionUID = -5058967696216064084L;
 	private AGV agv;
 
-	public AgvInformMessageHandler(AGV agv) {
+	public AgvInformIfMessageHandler(AGV agv) {
 		super(agv);
 		this.agv = agv;
 	}
@@ -20,7 +20,7 @@ public class AgvInformMessageHandler extends CyclicBehaviour{
 	@Override
 	public void action() {
 		
-		ACLMessage msg = myAgent.receive(MessageTemplate.MatchPerformative(ACLMessage.INFORM));
+		ACLMessage msg = myAgent.receive(MessageTemplate.MatchPerformative(ACLMessage.INFORM_IF));
 		
 		if(msg != null){
 			if(msg.getContent().compareTo("TAKE_DOWN") == 0){

@@ -155,8 +155,8 @@ public class Machine extends Agent {
 	}
 
 	public void setProductAtWork(Product productAtWork) {
-		System.out.println(getLocalName() + ": setProductAtWork:"
-				+ productAtWork);
+//		System.out.println(getLocalName() + ": setProductAtWork:"
+//				+ productAtWork);
 		this.productAtWork = productAtWork;
 		ProcessProductBehaviour processBehaviour = new ProcessProductBehaviour(
 				this.productAtWork, this);

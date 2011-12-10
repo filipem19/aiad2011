@@ -28,8 +28,6 @@ import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
 import products.Operation;
-import products.Product;
-import agents.machineEngine.Machine;
 
 
 public class SystemManagerGUI extends JFrame implements ActionListener{
@@ -44,10 +42,6 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 	private static final int WINDOW_X_POS = 500;
 	private static final int WINDOW_Y_POS = 50;
 	
-
-	private Vector<Machine> machines;
-	private Vector<Product> products;
-	private Vector<Operation> operations;
 	private SystemManager sysManager;
 	
 	private String[] listaAGV;
