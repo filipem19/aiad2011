@@ -377,6 +377,22 @@ public class SystemManager extends GuiAgent {
 
 		return agents;
 	}
+	
+	
+	
+	// TODO Usar mensagem que permita um retorno do agente. Percorrer todos os agentes.
+	
+	public void askLocation(String agentName) {
+		Location loc = null;
+		AID aID = new AID(agentName, AID.ISLOCALNAME);
+		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+		msg.setContent("LOC");
+		msg.addReceiver(aID);
+		send(msg);
+		
+		
+	}
+	
 
 	/**
 	 * 
