@@ -38,6 +38,12 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 	 * 
 	 */
 	private static final long serialVersionUID = -6978147188402748454L;
+	
+	private static final int WINDOW_X_SIZE = 800;
+	private static final int WINDOW_Y_SIZE = 800;
+	private static final int WINDOW_X_POS = 500;
+	private static final int WINDOW_Y_POS = 50;
+	
 
 	private Vector<Machine> machines;
 	private Vector<Product> products;
@@ -91,19 +97,41 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Initial platform");
 		setVisible(true);
-		setSize(500, 800);
-		setLocation(900, 50);
+		setSize(WINDOW_X_SIZE, WINDOW_Y_SIZE);
+		setLocation(WINDOW_X_POS, WINDOW_Y_POS);
 		
 		//---Pagina Principal---
 		
-		//Mapa Oficina
-		JPanel mapaOficina = new JPanel();
-		mapaOficina.setBackground(Color.ORANGE);
-		mapaOficina.setSize(400, 500);
+		// Simulação de lista de localizações de AGVs e de Máquinas.
+		int[][] AgvLoc = new int[10][2];
+		int[][] MachineLoc = new int[10][2];
 		
-		// Adicinar o mapa da localização dos Agentes.
-		mapa planta = new mapa();
-		mapaOficina.add(planta);
+		AgvLoc[0][0] = 10;
+		AgvLoc[0][1] = 10;
+		AgvLoc[1][0] = 70;
+		AgvLoc[1][1] = 90;
+		AgvLoc[2][0] = 60;
+		AgvLoc[2][1] = 40;
+		AgvLoc[3][0] = 15;
+		AgvLoc[3][1] = 50;
+		AgvLoc[4][0] = 25;
+		AgvLoc[4][1] = 100;
+		
+		MachineLoc[0][0] = 25;
+		MachineLoc[0][1] = 25;
+		MachineLoc[1][0] = 35;
+		MachineLoc[1][1] = 90;
+		MachineLoc[2][0] = 60;
+		MachineLoc[2][1] = 60;
+		MachineLoc[3][0] = 85;
+		MachineLoc[3][1] = 80;
+		MachineLoc[4][0] = 100;
+		MachineLoc[4][1] = 100;
+		
+		//Mapa Oficina
+		mapa mapaOficina = new mapa(AgvLoc, MachineLoc);
+		mapaOficina.setBackground(Color.ORANGE);
+		mapaOficina.setSize(WINDOW_X_SIZE / 2, WINDOW_Y_SIZE);
 		
 		//Opcoes de Adicionar e Remover
 		GridBagLayout opcoesLayout = new GridBagLayout();
@@ -241,7 +269,7 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 		
 		//Janela Principal
 		JSplitPane janela = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, mapaOficina, opcoes);
-		Dimension minimumSize = new Dimension(200, 500);
+		Dimension minimumSize = new Dimension(WINDOW_X_POS / 3, WINDOW_Y_POS / 4);
 		mapaOficina.setMinimumSize(minimumSize);
 		opcoes.setMinimumSize(minimumSize);
 		
@@ -325,8 +353,7 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 			nomeMaqText.setText("");
 			xMaqText.setText("");
 			yMaqText.setText("");
-			
-			
+						
 		} 
 		this.repaint();
 	}
