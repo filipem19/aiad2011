@@ -29,24 +29,16 @@ public class MachineContractResponder extends ContractNetResponder {
 	@Override
 	protected ACLMessage handleCfp(ACLMessage cfp) throws RefuseException,
 			FailureException, NotUnderstoodException {
-//		try {
-//			System.out.println("\n" + myAgent.getName() + ": handleCFP\n"
-//					+ "CFP received: agent (" + myAgent.getLocalName() + "):"
-//					+ cfp.getContentObject().getClass());
-//		} catch (UnreadableException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
+
 		ACLMessage reply = cfp.createReply();
 
 		reply.setPerformative(ACLMessage.PROPOSE);
 
-		// TODO include the message content
 		if (myAgent.getClass() == AGV.class) {
 			try {
-				if (cfp.getContentObject().getClass() == MachineCFP.class)
+				if (cfp.getContentObject().getClass() == Cfp.class)
 					reply = getAgvMessageContent(reply,
-							(MachineCFP) cfp.getContentObject(), (AGV) myAgent);
+							(Cfp) cfp.getContentObject(), (AGV) myAgent);
 			} catch (UnreadableException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -55,68 +47,69 @@ public class MachineContractResponder extends ContractNetResponder {
 			}
 		} else if (myAgent.getClass() == Machine.class) {
 			try {
-				if (cfp.getContentObject().getClass() == MachineCFP.class)
-					reply = getMachineMessageContent(reply,
-							(MachineCFP) cfp.getContentObject());
+				reply = getMachineMessageContent(reply,
+						(Cfp) cfp.getContentObject());
 			} catch (UnreadableException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				return null;
 			}
-		} else {
-			return null;
 		}
-
 		return reply;
 	}
 
 	private ACLMessage getMachineMessageContent(ACLMessage reply,
-			MachineCFP content) {
-		// TODO Auto-generated method stub
-		content.setDestination(myAgent.getAID());
-		content.setType(ObjectType.Machine);
-		try {
-			reply.setContentObject(content);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Cfp content) {
+		Machine machine = (Machine) myAgent;
+		if (machine.isOperationAvailable(content.getProduct()
+				.getCurrentOperation())) {
+			content.setDestination(myAgent.getAID());
+			content.setType(ObjectType.Machine);
+			try {
+				reply.setContentObject(content);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			reply.setPerformative(ACLMessage.REFUSE);
+			reply.setContent(null);
 		}
 		return reply;
 	}
 
 	private ACLMessage getAgvMessageContent(ACLMessage reply,
-			MachineCFP content, AGV agent) {
-		// TODO Auto-generated method stub
+			Cfp content, AGV agent) {
 		try {
 			reply.setContentObject(calculateCosts(content, agent));
 		} catch (IOException e) {
-			System.err.println(myAgent.getLocalName() + "ERROR: setting reply message content");
+			System.err.println(myAgent.getLocalName()
+					+ "ERROR: setting reply message content");
 			e.printStackTrace();
 			return null;
 		}
 		return reply;
 	}
 
-	private MachineCFP calculateCosts(MachineCFP content, AGV agent) {
+	private Cfp calculateCosts(Cfp content, AGV agent) {
 		HashMap<AID, Integer> mapCost = new HashMap<AID, Integer>();
-
+		//TODO improve cost calculation according products in the agv 
 		for (DFAgentDescription dfAgent : agent
 				.getAgentListWithService("ProcessProduct")) {
-			if (dfAgent.getName().getName().compareTo(content.getOrigin().getName()) != 0) {
+			if (dfAgent.getName().getName()
+					.compareTo(content.getOrigin().getName()) != 0) {
 				content = content.clone();
 				content.setDestination(dfAgent.getName());
 				content.setType(ObjectType.Agv);
-				mapCost.put(dfAgent.getName(),
-						(int) calculateCost(content.getOrigin().getName(),content.getDestination().getName(), agent));
+				content.setAgv(myAgent.getAID());
+				mapCost.put(
+						dfAgent.getName(),
+						(int) calculateCost(content.getOrigin().getName(),
+								content.getDestination().getName(), agent));
 			}
 		}
 
 		content.setMachineCostMap(mapCost);
-//		System.out.println(myAgent.getLocalName() + ": costs:");
-//		for (AID aid : mapCost.keySet())
-//			System.out.println("\t" + aid.getLocalName() + " = "
-//					+ mapCost.get(aid));
-//		System.out.println(myAgent.getLocalName() + ": ---------------------");
 		return content;
 	}
 
@@ -132,8 +125,8 @@ public class MachineContractResponder extends ContractNetResponder {
 	@Override
 	protected ACLMessage handleAcceptProposal(ACLMessage cfp,
 			ACLMessage propose, ACLMessage accept) throws FailureException {
-		// TODO Auto-generated method stub
-		System.out.println("proposta aceite:" + propose.toString());
+		// TODO Handle the accept
+		System.out.println("proposta aceite:" + propose.getConversationId());
 		ACLMessage reply = cfp.createReply();
 		reply.setPerformative(ACLMessage.INFORM);
 		return reply;
@@ -142,6 +135,8 @@ public class MachineContractResponder extends ContractNetResponder {
 	@Override
 	protected void handleRejectProposal(ACLMessage cfp, ACLMessage propose,
 			ACLMessage reject) {
-		System.out.println("Proposta rejeitada: " + propose.toString());
+		//TODO handle reject
+		System.out.println(myAgent.getLocalName() + ": Proposta rejeitada: "
+				+ propose.getConversationId());
 	}
 }

@@ -58,7 +58,7 @@ public class SystemManager extends GuiAgent {
 
 		sendMachineMap();
 		myGui = new SystemManagerGUI(this);
-//		testFunctions();
+		testFunctions();
 	}
 
 	private void sendMachineMap() {
@@ -74,7 +74,13 @@ public class SystemManager extends GuiAgent {
 		for (DFAgentDescription agv : getAgentListWithService("Transport")) {
 			machineMapMessage.addReceiver(agv.getName());
 		}
-		// System.out.println(getLocalName() + ": " + machineMapMessage);
+
+		try {
+			Thread.sleep(4000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		send(machineMapMessage);
 	}
 
@@ -90,7 +96,7 @@ public class SystemManager extends GuiAgent {
 			@Override
 			public void action() {
 				ACLMessage msg = receive(MessageTemplate
-						.MatchPerformative(ACLMessage.INFORM));
+						.MatchPerformative(ACLMessage.INFORM_IF));
 				if (msg != null) {
 					// mensagem com nome do agente a receber o produto e o
 					// produto
@@ -101,7 +107,7 @@ public class SystemManager extends GuiAgent {
 						DFAgentDescription[] agents = getAgentListWithService("ProcessProduct");
 
 						ACLMessage msgtomachine = new ACLMessage(
-								ACLMessage.INFORM);
+								ACLMessage.INFORM_IF);
 
 						for (DFAgentDescription agent : agents) {
 							if (agent.getName().getLocalName()
@@ -119,15 +125,15 @@ public class SystemManager extends GuiAgent {
 							e.printStackTrace();
 						}
 
-						try {
-							System.out.println(getLocalName()
-									+ ": teste sending message: "
-									+ msgtomachine + " message contentObject: "
-									+ msgtomachine.getContentObject());
-						} catch (UnreadableException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+//						try {
+//							System.out.println(getLocalName()
+//									+ ": teste sending message: "
+//									+ msgtomachine + " message contentObject: "
+//									+ msgtomachine.getContentObject());
+//						} catch (UnreadableException e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						}
 
 						send(msgtomachine);
 					}
@@ -170,8 +176,8 @@ public class SystemManager extends GuiAgent {
 
 	/**
 	 * 
-	 * @param strLine 
-	 * @param 
+	 * @param strLine
+	 * @param
 	 * @return
 	 */
 	private ObjectType decodeLine(String strLine, ObjectType objectType) {
@@ -379,7 +385,7 @@ public class SystemManager extends GuiAgent {
 	public void removeAgv(String agvName) {
 
 		AID aID = new AID(agvName, AID.ISLOCALNAME);
-		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+		ACLMessage msg = new ACLMessage(ACLMessage.INFORM_IF);
 		msg.setContent(TAKE_DOWN);
 		msg.addReceiver(aID);
 		send(msg);
@@ -394,11 +400,11 @@ public class SystemManager extends GuiAgent {
 		AID aID = new AID(machineName, AID.ISLOCALNAME);
 		machineMap.remove(aID.getName());
 		sendMachineMap();
-		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+		ACLMessage msg = new ACLMessage(ACLMessage.INFORM_IF);
 		msg.setContent(TAKE_DOWN);
 		msg.addReceiver(aID);
 		send(msg);
-		
+
 	}
 
 	/**
