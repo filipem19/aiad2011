@@ -107,22 +107,19 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 		MachineLoc[4][1] = 100;
 		
 		//Mapa Oficina
-		mapa mapaOficina = new mapa(AgvLoc, MachineLoc);
-		mapaOficina.setBackground(Color.ORANGE);
-		mapaOficina.setSize(WINDOW_X_SIZE / 2, WINDOW_Y_SIZE);
+		mapa facilityMap = new mapa(AgvLoc, MachineLoc);
+		facilityMap.setBackground(Color.ORANGE);
+		facilityMap.setSize(WINDOW_X_SIZE / 2, WINDOW_Y_SIZE);
 		
 		//Opcoes de Adicionar e Remover
 		GridBagLayout opcoesLayout = new GridBagLayout();
 		JPanel opcoes = new JPanel(opcoesLayout);
 		
-		JPanel adicionar = new JPanel(new BorderLayout ());
-		JPanel remover = new JPanel(new BorderLayout ());
+		JPanel addAgentPanel = new JPanel(new BorderLayout ());
+		JPanel removeAgentPanel = new JPanel(new BorderLayout ());
 		
-		JPanel agv = new JPanel(new BorderLayout ());
-		JPanel maq = new JPanel(new BorderLayout ());
-		
-		remover.setLayout(new BoxLayout(remover, BoxLayout.PAGE_AXIS));
-		adicionar.setLayout(new BoxLayout(adicionar, BoxLayout.PAGE_AXIS));
+		removeAgentPanel.setLayout(new BoxLayout(removeAgentPanel, BoxLayout.PAGE_AXIS));
+		addAgentPanel.setLayout(new BoxLayout(addAgentPanel, BoxLayout.PAGE_AXIS));
 					
 		//Remover AGV
 		DFAgentDescription[] agvs = sysManager.getAgentListWithService("Transport");
@@ -145,9 +142,9 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 		//Border - Criar Caixilhos
 		TitledBorder borderAdicionar, borderRemover;
 		borderAdicionar = BorderFactory.createTitledBorder("Adicionar");
-		adicionar.setBorder(borderAdicionar);
+		addAgentPanel.setBorder(borderAdicionar);
 		borderRemover = BorderFactory.createTitledBorder("Remover");
-		remover.setBorder(borderRemover);
+		removeAgentPanel.setBorder(borderRemover);
 		
 		//Label
 		JLabel labelAGV = new JLabel("AGV's");
@@ -167,12 +164,12 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 		removeMaq.setToolTipText("Escolha a Maquina que pretende remover da lista acima.");
 		
 		//Caixilho Remover
-		remover.add(labelAGV);
-		remover.add(comboAGV);
-		remover.add(removeAGV);
-		remover.add(labelMaq);
-		remover.add(comboMaq);
-		remover.add(removeMaq);
+		removeAgentPanel.add(labelAGV);
+		removeAgentPanel.add(comboAGV);
+		removeAgentPanel.add(removeAGV);
+		removeAgentPanel.add(labelMaq);
+		removeAgentPanel.add(comboMaq);
+		removeAgentPanel.add(removeMaq);
 		
 //		opcoes.add(remover, BorderLayout.EAST);
 		
@@ -207,50 +204,50 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 		JLabel labelOperacoes = new JLabel("Operações Máquina");
 			
 		//Caixilho Adicionar
-		adicionar.add(labelNomeAGV);
-		adicionar.add(nomeAGVText);
-		adicionar.add(labelAutonomiaAGV);
-		adicionar.add(autonomiaAGVText);
-		adicionar.add(labelCustoAGV);
-		adicionar.add(custoAGVText);
-		adicionar.add(labelXAGV);
-		adicionar.add(xAGVText);
-		adicionar.add(labelYAGV);
-		adicionar.add(yAGVText);
-		adicionar.add(labelVelocidadeAGV);
-		adicionar.add(velocidadeAGVText);
-		adicionar.add(labelCargaMaxAGV);
-		adicionar.add(cargaMaxAGVText);
-		adicionar.add(labelEstadoAGV);
-		adicionar.add(estadosAGV);
-		adicionar.add(addAGV);
+		addAgentPanel.add(labelNomeAGV);
+		addAgentPanel.add(nomeAGVText);
+		addAgentPanel.add(labelAutonomiaAGV);
+		addAgentPanel.add(autonomiaAGVText);
+		addAgentPanel.add(labelCustoAGV);
+		addAgentPanel.add(custoAGVText);
+		addAgentPanel.add(labelXAGV);
+		addAgentPanel.add(xAGVText);
+		addAgentPanel.add(labelYAGV);
+		addAgentPanel.add(yAGVText);
+		addAgentPanel.add(labelVelocidadeAGV);
+		addAgentPanel.add(velocidadeAGVText);
+		addAgentPanel.add(labelCargaMaxAGV);
+		addAgentPanel.add(cargaMaxAGVText);
+		addAgentPanel.add(labelEstadoAGV);
+		addAgentPanel.add(estadosAGV);
+		addAgentPanel.add(addAGV);
 		
-		adicionar.add(labelNomeMaq);
-		adicionar.add(nomeMaqText);
-		adicionar.add(labelXMaq);
-		adicionar.add(xMaqText);
-		adicionar.add(labelYMaq);
-		adicionar.add(yMaqText);
-		adicionar.add(labelOperacoes);
+		addAgentPanel.add(labelNomeMaq);
+		addAgentPanel.add(nomeMaqText);
+		addAgentPanel.add(labelXMaq);
+		addAgentPanel.add(xMaqText);
+		addAgentPanel.add(labelYMaq);
+		addAgentPanel.add(yMaqText);
+		addAgentPanel.add(labelOperacoes);
 //		adicionar.add(OperacoesText);
 		this.operationList = createList(sysManager.getExistingOperations());
 		this.operationList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-		adicionar.add(operationList);
-		adicionar.add(addMaq);
+		addAgentPanel.add(operationList);
+		addAgentPanel.add(addMaq);
 		
 		GridBagConstraints constraint = new GridBagConstraints();
 		constraint.fill = GridBagConstraints.HORIZONTAL;
 		constraint.weighty = 10;
-		opcoes.add(adicionar,constraint);
+		opcoes.add(addAgentPanel,constraint);
 		constraint.weighty=200;
-		opcoes.add(remover,constraint);
+		opcoes.add(removeAgentPanel,constraint);
 		
 		opcoes.add(addtestbutton(),constraint);
 		
 		//Janela Principal
-		JSplitPane janela = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, mapaOficina, opcoes);
+		JSplitPane janela = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, facilityMap, opcoes);
 		Dimension minimumSize = new Dimension(WINDOW_X_POS / 3, WINDOW_Y_POS / 4);
-		mapaOficina.setMinimumSize(minimumSize);
+		facilityMap.setMinimumSize(minimumSize);
 		opcoes.setMinimumSize(minimumSize);
 		
 		//Container
