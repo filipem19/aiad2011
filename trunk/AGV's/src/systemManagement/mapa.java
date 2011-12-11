@@ -70,7 +70,7 @@ public class mapa extends JPanel {
         	locX = MachinesLocs.get(chave).getX();
         	locY = MachinesLocs.get(chave).getY();
             g.setColor(Color.RED);
-            drawMachine(g, locX * this.getWidth() / 100 , locY * this.getHeight() / 100, agvSize);
+            drawMachine(g, locX * this.getWidth() / 100 , locY * this.getHeight() / 100, machineSize);
         	g.setColor(Color.BLACK);
             g.drawString(chave.getLocalName(), locX, locY);       	
         }

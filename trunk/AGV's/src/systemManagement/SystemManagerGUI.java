@@ -51,6 +51,10 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 	private JComboBox comboMaq;
 	private mapa facilityMap = new mapa();
 	
+	public mapa getFacilityMap() {
+		return facilityMap;
+	}
+
 	private String[] listaEstados = {"Good"}; //--estados possiveis
 	
 	private JTextField nomeAGVText = new JTextField();

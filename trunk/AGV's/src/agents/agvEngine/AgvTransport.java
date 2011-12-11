@@ -26,7 +26,6 @@ public class AgvTransport extends SimpleBehaviour{
 		System.out.println("origin (" + cfp.getOrigin().getLocalName() + ") location = " + location);
 		int timeToWait = ((int)myAgv.getLocation().distanceTo(location)/myAgv.getVelocity());
 		//TODO get Product from Machine
-		
 		//TRAVEL time to cfp origin
 		myAgent.doWait(timeToWait);
 		myAgv.setLocation(location);
@@ -34,6 +33,8 @@ public class AgvTransport extends SimpleBehaviour{
 		timeToWait = ((int)myAgv.getLocation().distanceTo(location)/myAgv.getVelocity());
 
 		//TRAVEL time to cfp destination
+		//set location destination
+
 		myAgent.doWait(timeToWait);
 		//TODO set Product to destination Machine
 

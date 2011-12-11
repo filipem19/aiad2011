@@ -17,6 +17,7 @@ import java.util.HashMap;
 import systemManagement.Location;
 import systemManagement.SystemManager.ObjectType;
 import agents.agvEngine.AGV;
+import agents.agvEngine.AgvTransport;
 import agents.machineEngine.Machine;
 
 public class ContractResponder extends ContractNetResponder {
@@ -72,6 +73,8 @@ public class ContractResponder extends ContractNetResponder {
 		System.out.println(myAgent.getLocalName() + ": proposta aceite:" + propose.getConversationId() + " content = " + content.getOrigin().getLocalName() + " " + content.getDestination().getLocalName() + " " + content.getAgv().getLocalName()); 
 		ACLMessage reply = accept.createReply();
 		reply.setPerformative(ACLMessage.INFORM);
+		if(myAgent.getClass() == AGV.class)
+			myAgent.addBehaviour(new AgvTransport((AGV) myAgent, content));
 		return reply;
 	}
 
