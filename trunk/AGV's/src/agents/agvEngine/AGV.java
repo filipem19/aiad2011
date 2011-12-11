@@ -1,5 +1,6 @@
 package agents.agvEngine;
 
+import java.lang.Math;
 import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
@@ -194,7 +195,73 @@ public class AGV extends Agent {
 	}
 
 	public void setLocation(Location location) {
-		this.location = location;
+		// Obter posição da machine de destino
+		int destX = location.getX(); //machineLocation;
+		int destY = location.getY(); //machineLocation;
+		
+		// Posição de inicio do AGV.
+		int locX, locY;
+		locX = location.getX();
+		locY = location.getY();
+		
+		int stepSize = (Math.abs(locX - destX) + Math.abs(locY - destY)) / velocity;   
+
+		while(locY != destY) {		
+			if(locX != destX) {
+				if(locX < destX) { // Direção positiva do X.
+					if(Math.abs(locX - destX) < stepSize) { // Podemos dar o passo inteiro.
+						locX += stepSize;
+					}
+					else { // Não podemos dar passo inteiro
+						if (locY < destY) {	// Dar o resto do passo no Y. NOTA: Tem de ser antes de mudar o locX.
+							locY += stepSize - (locX - destX);	// Y no sentido positivo.
+						}
+						else {
+							locY -= stepSize - (locX - destX);	// Y no sentido negativo.
+						}
+						locX = destX;	// Colocar o X no destino	
+					}
+				}
+				else {	// Direção negativa do X.
+					if(Math.abs(locX - destX) < stepSize) { // Podemos dar o passo inteiro.
+						locX -= stepSize;
+					}
+					else { // Não podemos dar passo inteiro.
+						if (locY < destY) {	// Dar o resto do passo no Y. NOTA: Tem de ser antes de mudar o locX.
+							locY += stepSize - (locX - destX);	// Y no sentido positivo.
+						}
+						else {
+							locY -= stepSize - (locX - destX);	// Y no sentido negativo.
+						}
+						locX = destX;	// Colocar o X no destino	
+					}
+				}
+			}
+			else{	// Já percorremos todo X, vamos percorrer Y.
+				if(locY < destY) { // Direção positiva do Y.
+					if(Math.abs(locY - destY) < stepSize) { // Podemos dar o passo inteiro.
+						locY += stepSize;
+					}
+					else { // Não podemos dar passo inteiro
+						locY = destY;	// Colocar o Y no destino	
+					}
+				}
+				else {	// Direção negativa do Y.
+					if(Math.abs(locY - destY) < stepSize) { // Podemos dar o passo inteiro.
+						locY -= stepSize;
+					}
+					else { // Não podemos dar passo inteiro.
+						locY = destY;	// Colocar o Y no destino	
+					}
+				}				
+			}		
+			try {
+				Thread.sleep(500);	// Aguardar 500 milissegundos para simular movimento real.
+				
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}	
+		}	// Fim do while
 	}
 
 	@Override
@@ -231,5 +298,6 @@ public class AGV extends Agent {
 
 	public void setMachineLocation(HashMap<String, Location> machineLocation) {
 		this.machineLocation = machineLocation;
+
 	}
 }

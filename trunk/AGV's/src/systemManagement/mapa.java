@@ -1,13 +1,21 @@
 package systemManagement;
 
+import jade.core.AID;
+
 import java.awt.*;
 import javax.swing.JPanel;
+import java.util.HashMap;
 
 public class mapa extends JPanel {
 	private static final long serialVersionUID = -1038095695342942324L;
 	
 	private int agvSize = 10;
 	private int machineSize = 20;
+	
+	private HashMap<AID, Location> AgvsLocs = new HashMap<AID, Location>();
+	private HashMap<AID, Location> MachinesLocs = new HashMap<AID, Location>();
+	
+	
 	public int[][] AgvLoc;
 	public int[][] MachineLoc;
 
@@ -25,7 +33,23 @@ public class mapa extends JPanel {
     private void drawMachine(Graphics g, int x, int y, int size) {
     	g.fillRect(x, y, size, size);
     }
- 
+    
+    public void changeAGVLoc(AID agvAID, Location location) {
+    	AgvsLocs.put(agvAID, location);
+    }
+    
+    public void changeMachineLoc(AID machineAID, Location location) {
+    	MachinesLocs.put(machineAID, location);
+    }
+    
+    public void removeAGV(AID agvAID) {
+    	AgvsLocs.remove(agvAID);
+    }
+  
+    public void removeMachine(AID machineAID) {
+    	AgvsLocs.remove(machineAID);
+    }
+     
 	@Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);

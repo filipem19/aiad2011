@@ -42,6 +42,8 @@ public class SystemManager extends GuiAgent {
 	private HashMap<String, Operation> existingOperations = new HashMap<String, Operation>();
 	private HashMap<String, Product> existingProducts = new HashMap<String, Product>();
 	private HashMap<String, Location> machineMap = new HashMap<String, Location>();
+	
+
 
 	transient protected SystemManagerGUI myGui; // The gui
 
@@ -373,7 +375,7 @@ public class SystemManager extends GuiAgent {
 	public void askLocation(String agentName) {
 		Location loc = null;
 		AID aID = new AID(agentName, AID.ISLOCALNAME);
-		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+		ACLMessage msg = new ACLMessage(ACLMessage.INFORM_IF);
 		msg.setContent("LOC");
 		msg.addReceiver(aID);
 		send(msg);
