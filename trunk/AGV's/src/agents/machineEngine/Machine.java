@@ -65,7 +65,7 @@ public class Machine extends Agent {
 
 	public void initializeAgent() {
 
-		addBehaviour(new MachineInformMessageHandler(this));
+		addBehaviour(new MachineInformIfMessageHandler(this));
 
 		registerAgentAtDF("ProcessProduct:" + getMachineName(),
 				"ProcessProduct");

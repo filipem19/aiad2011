@@ -25,6 +25,7 @@ public class AgvInformRefHandler extends CyclicBehaviour{
 //		System.out.println(myAgent.getLocalName() + "added behaviour inform ref handler");
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void action() {
 		ACLMessage msg = myAgent.receive(MessageTemplate.MatchPerformative(ACLMessage.INFORM_REF));
@@ -34,7 +35,7 @@ public class AgvInformRefHandler extends CyclicBehaviour{
 				Serializable content = msg.getContentObject();
 				if(content != null && content.getClass() == HashMap.class){
 					HashMap<String, Location> machineLocation = (HashMap<String, Location>) content;
-					agv.setMachineLocation(machineLocation);
+					agv.setMachineMap(machineLocation);
 				}
 			} catch (UnreadableException e) {
 				// TODO Auto-generated catch block
