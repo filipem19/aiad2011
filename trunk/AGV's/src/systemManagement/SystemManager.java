@@ -432,6 +432,7 @@ public class SystemManager extends GuiAgent {
 	public void addMachine(String machineName, String[] params) {
 		createMachineWithProperties(machineName, params);
 		sendMachineMap();
+		myGui.refreshMachineMap(machineMap);
 	}
 
 	public HashMap<String, Operation> getExistingOperations() {

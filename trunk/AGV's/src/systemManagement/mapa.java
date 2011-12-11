@@ -15,15 +15,6 @@ public class mapa extends JPanel {
 	private HashMap<AID, Location> AgvsLocs = new HashMap<AID, Location>();
 	private HashMap<AID, Location> MachinesLocs = new HashMap<AID, Location>();
 	
-	
-	public int[][] AgvLoc;
-	public int[][] MachineLoc;
-
-    public mapa(int[][] agvLoc, int[][] machineLoc) {
-		AgvLoc = agvLoc;
-		MachineLoc = machineLoc;
-	}
-
 	// Desenho do AGV
     private void drawAgv(Graphics g, int x, int y, int size) {
     	g.fillOval(x, y, size, size);
@@ -38,8 +29,13 @@ public class mapa extends JPanel {
     	AgvsLocs.put(agvAID, location);
     }
     
-    public void changeMachineLoc(AID machineAID, Location location) {
-    	MachinesLocs.put(machineAID, location);
+    public void changeMachineLoc(HashMap<String, Location> machineMap) {
+    	for(String aid: machineMap.keySet())
+    	{
+    		AID machineAID = new AID(aid, AID.ISLOCALNAME);
+    		MachinesLocs.put(machineAID, machineMap.get(aid));
+    	}
+    	repaint();    	
     }
     
     public void removeAGV(AID agvAID) {
@@ -57,18 +53,26 @@ public class mapa extends JPanel {
         g2d.setRenderingHint(
            RenderingHints.KEY_ANTIALIASING,                
            RenderingHints.VALUE_ANTIALIAS_ON);
-        g.setColor(Color.BLACK);
-      
+        
         // Desenhar os AGVs 
-        g.setColor(Color.MAGENTA);
-    	for (int i = 0; i <= AgvLoc.length / 2; i++) {
-        	drawAgv(g, AgvLoc[i][0] * this.getWidth() / 100 , AgvLoc[i][1] * this.getHeight() / 100, agvSize);
-    	}
+        int locX, locY;
+        for(AID chave: AgvsLocs.keySet()) {
+        	locX = AgvsLocs.get(chave).getX();
+        	locY = AgvsLocs.get(chave).getY();
+            g.setColor(Color.MAGENTA);
+        	drawAgv(g, locX * this.getWidth() / 100 , locY * this.getHeight() / 100, agvSize);
+        	g.setColor(Color.BLACK);
+            g.drawString(chave.getLocalName(), locX, locY);       	
+        }
         
         // Desenhar as Máquinas
-        g.setColor(Color.RED);
-    	for (int i = 0; i <= MachineLoc.length / 2; i++) {
-    		drawMachine(g, MachineLoc[i][0] * this.getWidth() / 100 , MachineLoc[i][1] * this.getHeight() / 100, machineSize);
-    	}
-    }
+        for(AID chave: MachinesLocs.keySet()) {
+        	locX = MachinesLocs.get(chave).getX();
+        	locY = MachinesLocs.get(chave).getY();
+            g.setColor(Color.RED);
+            drawMachine(g, locX * this.getWidth() / 100 , locY * this.getHeight() / 100, agvSize);
+        	g.setColor(Color.BLACK);
+            g.drawString(chave.getLocalName(), locX, locY);       	
+        }
+	}
 }

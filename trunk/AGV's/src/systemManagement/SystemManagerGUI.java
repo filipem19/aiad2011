@@ -1,5 +1,6 @@
 package systemManagement;
       
+import jade.core.AID;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.lang.acl.ACLMessage;
 
@@ -48,6 +49,7 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 	private JComboBox comboAGV;
 	private String[] listaMaq;
 	private JComboBox comboMaq;
+	private mapa facilityMap = new mapa();
 	
 	private String[] listaEstados = {"Good"}; //--estados possiveis
 	
@@ -107,7 +109,7 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 		MachineLoc[4][1] = 100;
 		
 		//Mapa Oficina
-		mapa facilityMap = new mapa(AgvLoc, MachineLoc);
+		
 		facilityMap.setBackground(Color.ORANGE);
 		facilityMap.setSize(WINDOW_X_SIZE / 2, WINDOW_Y_SIZE);
 		
@@ -345,5 +347,9 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 			sysManager.send(msg);
 		}
 		this.repaint();
+	}
+
+	public void refreshMachineMap(HashMap<String, Location> machineMap) {		
+		facilityMap.changeMachineLoc(machineMap);		
 	}
 }
