@@ -4,12 +4,10 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
@@ -70,21 +68,6 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 	public SystemManagerGUI(SystemManager sysManager) {
 		this.sysManager = sysManager;
 		initializeWindowPreferences();
-	}
-
-	
-	private JPanel createJpanelWithComponents(String label, int lines, int rows, Vector<Component> components){
-		JPanel opcoes = new JPanel(new GridLayout(lines,rows));
-		if(label != null){
-			
-		}
-		else{
-			
-		}
-		
-		for(Component c: components)
-			opcoes.add(c);
-		return opcoes;
 	}
 	
 	private void initializeWindowPreferences(){

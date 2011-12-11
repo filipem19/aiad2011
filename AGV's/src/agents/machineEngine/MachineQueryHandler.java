@@ -31,6 +31,7 @@ public class MachineQueryHandler extends CyclicBehaviour{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			System.out.println(myAgent.getLocalName() + ": sending response to query if with performative: " + ACLMessage.getPerformative(msg.getPerformative()));
 			myAgent.send(reply);
 		}
 		

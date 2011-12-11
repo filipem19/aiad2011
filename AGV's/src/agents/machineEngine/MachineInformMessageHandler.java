@@ -25,8 +25,8 @@ public class MachineInformMessageHandler extends CyclicBehaviour {
 //			System.out.println(myAgent.getLocalName() + ": msg > " + msg
 //					+ " -> class = " + myAgent.getClass());
 			if (msg.getContent() != null && msg.getContent().compareTo("TAKE_DOWN") == 0 && msg.getConversationId() == null) {
-				System.out.println(myAgent.getLocalName() + "message (" + msg.getConversationId() + "): "
-						+ msg.getContent());
+//				System.out.println(myAgent.getLocalName() + "message (" + msg.getConversationId() + "): "
+//						+ msg.getContent());
 				((Machine) myAgent).shutdownAgent();
 				System.out.print("vou-me desligar " + myAgent.getName() + "\n");
 			} else {

@@ -10,7 +10,6 @@ import jade.gui.GuiAgent;
 import jade.gui.GuiEvent;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import jade.lang.acl.UnreadableException;
 import jade.wrapper.AgentController;
 import jade.wrapper.StaleProxyException;
 
@@ -49,13 +48,7 @@ public class SystemManager extends GuiAgent {
 	@Override
 	protected void setup() {
 		loadProgramData("ProgramData");
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		
 		sendMachineMap();
 		myGui = new SystemManagerGUI(this);
 		testFunctions();
@@ -70,17 +63,12 @@ public class SystemManager extends GuiAgent {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		doWait(2000);
 		for (DFAgentDescription agv : getAgentListWithService("Transport")) {
 			machineMapMessage.addReceiver(agv.getName());
 		}
 
-		try {
-			Thread.sleep(4000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 		send(machineMapMessage);
 	}
 
@@ -282,7 +270,7 @@ public class SystemManager extends GuiAgent {
 
 		double currentWeight = Double.parseDouble(properties[0]);
 
-		int i = 2;
+		int i = 1;
 
 		while (i < properties.length) {
 			if (!existingOperations.containsKey(properties[i])) {

@@ -19,10 +19,10 @@ import systemManagement.SystemManager.ObjectType;
 import agents.agvEngine.AGV;
 import agents.machineEngine.Machine;
 
-public class MachineContractResponder extends ContractNetResponder {
+public class ContractResponder extends ContractNetResponder {
 	private static final long serialVersionUID = 3560413304270027206L;
 
-	public MachineContractResponder(Agent a, MessageTemplate mt) {
+	public ContractResponder(Agent a, MessageTemplate mt) {
 		super(a, mt);
 	}
 
@@ -33,7 +33,7 @@ public class MachineContractResponder extends ContractNetResponder {
 		ACLMessage reply = cfp.createReply();
 
 		reply.setPerformative(ACLMessage.PROPOSE);
-
+		
 		if (myAgent.getClass() == AGV.class) {
 			try {
 				if (cfp.getContentObject().getClass() == Cfp.class)
@@ -59,7 +59,7 @@ public class MachineContractResponder extends ContractNetResponder {
 	}
 
 	private ACLMessage getMachineMessageContent(ACLMessage reply,
-			Cfp content) {
+			Cfp content) throws RefuseException {
 		Machine machine = (Machine) myAgent;
 		if (machine.isOperationAvailable(content.getProduct()
 				.getCurrentOperation())) {
@@ -72,8 +72,9 @@ public class MachineContractResponder extends ContractNetResponder {
 				e.printStackTrace();
 			}
 		} else {
-			reply.setPerformative(ACLMessage.REFUSE);
-			reply.setContent(null);
+			throw new RefuseException("evaluation-failed");
+//			reply.setPerformative(ACLMessage.REFUSE);
+//			reply.setContent(null);
 		}
 		return reply;
 	}
@@ -91,26 +92,26 @@ public class MachineContractResponder extends ContractNetResponder {
 		return reply;
 	}
 
-	private Cfp calculateCosts(Cfp content, AGV agent) {
+	private Cfp calculateCosts(Cfp cfpContent, AGV agent) {
 		HashMap<AID, Integer> mapCost = new HashMap<AID, Integer>();
 		//TODO improve cost calculation according products in the agv 
 		for (DFAgentDescription dfAgent : agent
 				.getAgentListWithService("ProcessProduct")) {
 			if (dfAgent.getName().getName()
-					.compareTo(content.getOrigin().getName()) != 0) {
-				content = content.clone();
-				content.setDestination(dfAgent.getName());
-				content.setType(ObjectType.Agv);
-				content.setAgv(myAgent.getAID());
+					.compareTo(cfpContent.getOrigin().getName()) != 0) {
+				cfpContent = cfpContent.clone();
+				cfpContent.setDestination(dfAgent.getName());
+				cfpContent.setType(ObjectType.Agv);
+				cfpContent.setAgv(myAgent.getAID());
 				mapCost.put(
 						dfAgent.getName(),
-						(int) calculateCost(content.getOrigin().getName(),
-								content.getDestination().getName(), agent));
+						(int) calculateCost(cfpContent.getOrigin().getName(),
+								cfpContent.getDestination().getName(), agent));
 			}
 		}
 
-		content.setMachineCostMap(mapCost);
-		return content;
+		cfpContent.setMachineCostMap(mapCost);
+		return cfpContent;
 	}
 
 	private double calculateCost(String originMachine,
@@ -126,17 +127,18 @@ public class MachineContractResponder extends ContractNetResponder {
 	protected ACLMessage handleAcceptProposal(ACLMessage cfp,
 			ACLMessage propose, ACLMessage accept) throws FailureException {
 		// TODO Handle the accept
-		System.out.println("proposta aceite:" + propose.getConversationId());
+		System.out.println(myAgent.getLocalName() + ": proposta aceite:" + propose.getConversationId());
 		ACLMessage reply = cfp.createReply();
 		reply.setPerformative(ACLMessage.INFORM);
-		return reply;
+//		return reply;
+		return null;
 	}
 
 	@Override
 	protected void handleRejectProposal(ACLMessage cfp, ACLMessage propose,
 			ACLMessage reject) {
 		//TODO handle reject
-		System.out.println(myAgent.getLocalName() + ": Proposta rejeitada: "
-				+ propose.getConversationId());
+//		System.out.println(myAgent.getLocalName() + ": Proposta rejeitada: "
+//				+ propose.getConversationId());
 	}
 }

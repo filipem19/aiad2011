@@ -2,7 +2,7 @@ Operations
 //OperatioName:operationDuration deltaWeight
 op1:25 -10
 op2:25 -10
-op3:5 -5
+op3:1 -5
 op4:15 20
 op5:15 20
 op6:5 -5

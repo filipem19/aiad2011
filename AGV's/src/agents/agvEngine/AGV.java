@@ -11,7 +11,7 @@ import jade.lang.acl.MessageTemplate;
 
 import java.util.HashMap;
 
-import negotiationEngine.MachineContractResponder;
+import negotiationEngine.ContractResponder;
 import systemManagement.Location;
 
 public class AGV extends Agent {
@@ -82,7 +82,7 @@ public class AGV extends Agent {
 						.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
 						MessageTemplate.MatchPerformative(ACLMessage.CFP));
 
-		addBehaviour(new MachineContractResponder(this, template));
+		addBehaviour(new ContractResponder(this, template));
 
 	}
 
