@@ -31,13 +31,12 @@ public class ContractResponder extends ContractNetResponder {
 			FailureException, NotUnderstoodException {
 
 		ACLMessage reply = cfp.createReply();
-
 		reply.setPerformative(ACLMessage.PROPOSE);
 		
 		if (myAgent.getClass() == AGV.class) {
 			try {
 				if (cfp.getContentObject().getClass() == Cfp.class)
-					reply = getAgvMessageContent(reply,
+					reply = getAgvResponseMessage(reply,
 							(Cfp) cfp.getContentObject(), (AGV) myAgent);
 			} catch (UnreadableException e) {
 				// TODO Auto-generated catch block
@@ -79,7 +78,7 @@ public class ContractResponder extends ContractNetResponder {
 		return reply;
 	}
 
-	private ACLMessage getAgvMessageContent(ACLMessage reply,
+	private ACLMessage getAgvResponseMessage(ACLMessage reply,
 			Cfp content, AGV agent) {
 		try {
 			reply.setContentObject(calculateCosts(content, agent));
@@ -97,16 +96,15 @@ public class ContractResponder extends ContractNetResponder {
 		//TODO improve cost calculation according products in the agv 
 		for (DFAgentDescription dfAgent : agent
 				.getAgentListWithService("ProcessProduct")) {
+
+			//check if origin is diferent than the destination to calculate the cost
 			if (dfAgent.getName().getName()
 					.compareTo(cfpContent.getOrigin().getName()) != 0) {
 				cfpContent = cfpContent.clone();
-				cfpContent.setDestination(dfAgent.getName());
 				cfpContent.setType(ObjectType.Agv);
 				cfpContent.setAgv(myAgent.getAID());
-				mapCost.put(
-						dfAgent.getName(),
-						(int) calculateCost(cfpContent.getOrigin().getName(),
-								cfpContent.getDestination().getName(), agent));
+				mapCost.put(dfAgent.getName(),
+						(int) calculateCost(cfpContent.getOrigin().getName(),dfAgent.getName().getName(), agent));
 			}
 		}
 
@@ -125,20 +123,20 @@ public class ContractResponder extends ContractNetResponder {
 
 	@Override
 	protected ACLMessage handleAcceptProposal(ACLMessage cfp,
-			ACLMessage propose, ACLMessage accept) throws FailureException {
+			ACLMessage propose, ACLMessage accept){
 		// TODO Handle the accept
+		
+		
 		System.out.println(myAgent.getLocalName() + ": proposta aceite:" + propose.getConversationId());
-		ACLMessage reply = cfp.createReply();
+		ACLMessage reply = accept.createReply();
 		reply.setPerformative(ACLMessage.INFORM);
-//		return reply;
-		return null;
+		return reply;
 	}
 
 	@Override
 	protected void handleRejectProposal(ACLMessage cfp, ACLMessage propose,
 			ACLMessage reject) {
-		//TODO handle reject
-//		System.out.println(myAgent.getLocalName() + ": Proposta rejeitada: "
-//				+ propose.getConversationId());
+		System.out.println(myAgent.getLocalName() + ": propose was rejected");
 	}
+
 }
