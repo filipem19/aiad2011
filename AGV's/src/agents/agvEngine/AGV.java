@@ -211,15 +211,18 @@ public class AGV extends Agent {
 	}
 	
 
-	public void setLocation(Location location) {
+	public void setLocation(Location locationFim) {
+		
 		// Obter posição da machine de destino
-		int destX = location.getX(); //machineLocation;
-		int destY = location.getY(); //machineLocation;
+		int destX = locationFim.getX(); //machineLocation;
+		int destY = locationFim.getY(); //machineLocation;
 		
 		// Posição de inicio do AGV.
 		double locX, locY;
 		locX = location.getX();
 		locY = location.getY();
+		
+		System.out.println(getLocalName()+ ": vou passear para " + location.getX() + " y= " + location.getY());
 		
 		double stepSize = Math.sqrt(Math.pow(Math.abs(locX - destX), 2) + Math.pow(Math.abs(locY - destY), 2))/ velocity;
 		while(locY != destY) {		
@@ -252,8 +255,8 @@ public class AGV extends Agent {
 						locX = destX;	// Colocar o X no destino
 					}
 				}
-				location.setX((int)locX);
-				location.setY((int)locY);
+				this.location.setX((int)locX);
+				this.location.setY((int)locY);
 			}
 			else{	// Já percorremos todo X, vamos percorrer Y.
 				if(locY < destY) { // Direção positiva do Y.
@@ -272,12 +275,12 @@ public class AGV extends Agent {
 						locY = destY;	// Colocar o Y no destino	
 					}
 				}
-				location.setY((int)locY);
+				this.location.setY((int)locY);
 			}		
 			try {
 				// Avisar que o mapa de que se moveu.
 				informLocation(location);
-				Thread.sleep(500);	// Aguardar 500 milissegundos para simular movimento real.
+				Thread.sleep(50);	// Aguardar 500 milissegundos para simular movimento real.
 				
 			} catch (InterruptedException e) {
 				e.printStackTrace();
