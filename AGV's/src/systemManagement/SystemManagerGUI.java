@@ -49,9 +49,9 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 	private JComboBox comboAGV;
 	private String[] listaMaq;
 	private JComboBox comboMaq;
-	private mapa facilityMap = new mapa();
+	private FactoryMap facilityMap = new FactoryMap();
 	
-	public mapa getFacilityMap() {
+	public FactoryMap getFacilityMap() {
 		return facilityMap;
 	}
 
@@ -324,6 +324,8 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 			msg.setContent("m10 p1");
 			msg.addReceiver(sysManager.getAID());
 			sysManager.send(msg);
+			
+			getFacilityMap().changeAGVLoc((AID) getFacilityMap().AgvsLocs.keySet().iterator().next().clone(), new Location(8, 8));
 		}
 		this.repaint();
 	}

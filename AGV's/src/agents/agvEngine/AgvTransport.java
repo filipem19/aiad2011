@@ -27,26 +27,26 @@ public class AgvTransport extends SimpleBehaviour{
 	public void action() {
 		Location location = myAgv.getMachineLocation(cfp.getOrigin().getName());
 		System.out.println(myAgent.getLocalName() + ": origin (" + cfp.getOrigin().getLocalName() + ") location = " + location);
-		int timeToWait = ((int)myAgv.getLocation().distanceTo(location)/myAgv.getVelocity());
+		int timeToWait = (int) (myAgv.getLocation().distanceTo(location)/(myAgv.getVelocity()/10));
 		
 		//TRAVEL time to cfp origin
-//		myAgent.doWait(timeToWait*1000);
-		//TODO get Product from Machine
-		removeProductAtOriginMachine();
-		location.setX(10);
-		location.setY(10);
-		
+		System.out.println("w8 = " + timeToWait*1000);
+		myAgent.doWait(Math.abs(timeToWait*1000));
+		System.out.println("origin location " + location);
 		myAgv.setLocation(location);
+		removeProductAtOriginMachine();
+		
 		location = myAgv.getMachineLocation(cfp.getDestination().getName());
-		timeToWait = ((int)myAgv.getLocation().distanceTo(location)/myAgv.getVelocity());
+		timeToWait = (int) (myAgv.getLocation().distanceTo(location)/myAgv.getVelocity());
 
 		//TRAVEL time to cfp destination
 		//set location destination
 
-//		myAgent.doWait(timeToWait*1000);
-		//TODO set Product to destination Machine
+		System.out.println("w8 = " + timeToWait*1000);
+		myAgent.doWait(Math.abs(timeToWait*1000));
+		System.out.println("destination location " + location);
+		myAgv.setLocation(location);
 		setProductAtDestinationMachine();
-		myAgent.doWait(3000);
 		myAgent.removeBehaviour(this);
 
 	}
