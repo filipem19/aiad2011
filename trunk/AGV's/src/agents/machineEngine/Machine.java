@@ -32,6 +32,8 @@ public class Machine extends Agent {
 													// perform
 
 	/* ------ */
+	
+	private ProcessProductBehaviour processBehaviour;
 
 	@Override
 	protected void setup() {
@@ -159,9 +161,15 @@ public class Machine extends Agent {
 //		System.out.println(getLocalName() + ": setProductAtWork:"
 //				+ productAtWork);
 		this.productAtWork = productAtWork;
-		ProcessProductBehaviour processBehaviour = new ProcessProductBehaviour(
-				this.productAtWork, this);
-		addBehaviour(processBehaviour);
+		if(processBehaviour != null){
+			removeBehaviour(processBehaviour);
+		}
+		
+		if(productAtWork != null){
+			processBehaviour = new ProcessProductBehaviour(
+					this.productAtWork, this);
+			addBehaviour(processBehaviour);
+		}
 	}
 
 	@Override

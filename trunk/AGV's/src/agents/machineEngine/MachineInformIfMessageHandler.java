@@ -24,14 +24,15 @@ public class MachineInformIfMessageHandler extends CyclicBehaviour {
 		if (msg != null) {
 //			System.out.println(myAgent.getLocalName() + ": msg > " + msg
 //					+ " -> class = " + myAgent.getClass());
-			if (msg.getContent() != null && msg.getContent().compareTo("TAKE_DOWN") == 0 && msg.getConversationId() == null) {
-//				System.out.println(myAgent.getLocalName() + "message (" + msg.getConversationId() + "): "
-//						+ msg.getContent());
+			if (msg.getContent() != null && msg.getContent().compareTo("TAKE_DOWN") == 0) {
+				System.out.println(myAgent.getLocalName() + "message (" + msg.getConversationId() + "): "
+						+ msg.getContent());
 				((Machine) myAgent).shutdownAgent();
 				System.out.print("vou-me desligar " + myAgent.getName() + "\n");
 			} else {
 				Product p = null;
 				try {
+					System.out.println(myAgent.getLocalName() + ": contenttype " + msg.getContentObject()); 
 					p = (Product) msg.getContentObject();
 					System.out.println(myAgent.getLocalName()
 							+ ": messageObjectContent() = " + p);
@@ -39,9 +40,9 @@ public class MachineInformIfMessageHandler extends CyclicBehaviour {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				if (p != null) {
-					machine.setProductAtWork(p);
-				}
+				System.out.println(myAgent.getLocalName() + ": setting product to " + p);
+
+				machine.setProductAtWork(p);
 			}
 		}
 		block();

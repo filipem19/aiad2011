@@ -318,7 +318,9 @@ public class AGV extends Agent {
 
 	}
 	
-	public Location getmachiLocation (String machineLocalName){
+	public Location getMachineLocation (String machineLocalName){
+//		for(String s: machineLocation.keySet())
+//			System.out.println("machineLocation for = " + s + " machinelocalname = " + machineLocalName);
 		return machineLocation.get(machineLocalName);
 	}
 	
