@@ -200,12 +200,11 @@ public class AGV extends Agent {
 		int destY = location.getY(); //machineLocation;
 		
 		// Posição de inicio do AGV.
-		int locX, locY;
+		double locX, locY;
 		locX = location.getX();
 		locY = location.getY();
 		
-		int stepSize = (Math.abs(locX - destX) + Math.abs(locY - destY)) / velocity;   
-
+		double stepSize = Math.sqrt(Math.pow(Math.abs(locX - destX), 2) + Math.pow(Math.abs(locY - destY), 2))/ velocity;
 		while(locY != destY) {		
 			if(locX != destX) {
 				if(locX < destX) { // Direção positiva do X.
