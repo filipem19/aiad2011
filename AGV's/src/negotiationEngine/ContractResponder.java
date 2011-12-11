@@ -57,6 +57,30 @@ public class ContractResponder extends ContractNetResponder {
 		return reply;
 	}
 
+	@Override
+	protected ACLMessage handleAcceptProposal(ACLMessage cfp,
+			ACLMessage propose, ACLMessage accept){
+		// TODO Handle the accept
+		Cfp content = null;
+		try {
+			content = (Cfp) accept.getContentObject();
+		} catch (UnreadableException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		System.out.println(myAgent.getLocalName() + ": proposta aceite:" + propose.getConversationId() + " content = " + content.getOrigin().getLocalName() + " " + content.getDestination().getLocalName() + " " + content.getAgv().getLocalName()); 
+		ACLMessage reply = accept.createReply();
+		reply.setPerformative(ACLMessage.INFORM);
+		return reply;
+	}
+
+	@Override
+	protected void handleRejectProposal(ACLMessage cfp, ACLMessage propose,
+			ACLMessage reject) {
+		System.out.println(myAgent.getLocalName() + ": propose was rejected");
+	}
+	
 	private ACLMessage getMachineMessageContent(ACLMessage reply,
 			Cfp content) throws RefuseException {
 		Machine machine = (Machine) myAgent;
@@ -119,24 +143,6 @@ public class ContractResponder extends ContractNetResponder {
 				.distanceTo(map.get(originMachine), map.get(destinationMachine)))
 				* agent.getCost();
 		return cost;
-	}
-
-	@Override
-	protected ACLMessage handleAcceptProposal(ACLMessage cfp,
-			ACLMessage propose, ACLMessage accept){
-		// TODO Handle the accept
-		
-		
-		System.out.println(myAgent.getLocalName() + ": proposta aceite:" + propose.getConversationId());
-		ACLMessage reply = accept.createReply();
-		reply.setPerformative(ACLMessage.INFORM);
-		return reply;
-	}
-
-	@Override
-	protected void handleRejectProposal(ACLMessage cfp, ACLMessage propose,
-			ACLMessage reject) {
-		System.out.println(myAgent.getLocalName() + ": propose was rejected");
 	}
 
 }

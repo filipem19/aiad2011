@@ -63,7 +63,6 @@ public class AGV extends Agent {
 
 			initializeAgvContractResponder();
 
-//			addBehaviour(new AgvAgentSync(this));
 			addBehaviour(new AgvInformIfMessageHandler(this));
 			addBehaviour(new AgvInformRefHandler(this));
 		}
@@ -284,10 +283,6 @@ public class AGV extends Agent {
 			e.printStackTrace();
 		}
 
-		// System.out.println("agents with " + serviceName + "service:");
-		// for (DFAgentDescription a : agents)
-		// System.out.println("\t" + a.getName());
-
 		return agents;
 	}
 
@@ -295,8 +290,14 @@ public class AGV extends Agent {
 		return machineLocation;
 	}
 
-	public void setMachineLocation(HashMap<String, Location> machineLocation) {
+	public void setMachineMap(HashMap<String, Location> machineLocation) {
 		this.machineLocation = machineLocation;
 
 	}
+	
+	public Location getmachiLocation (String machineLocalName){
+		return machineLocation.get(machineLocalName);
+	}
+	
+	
 }

@@ -31,7 +31,7 @@ public class ContractInitiator extends ContractNetInitiator {
 
 	@Override
 	protected void handleAllResponses(Vector responses, Vector acceptances) {
-		System.out.println(myAgent.getLocalName() + ": handle all proposes");
+		System.out.println(myAgent.getLocalName() + ": handle all proposes responses.size = " + responses.size() + " acceptances.size = " + acceptances.size());
 		Enumeration e = responses.elements();
 		while (e.hasMoreElements()) {
 
