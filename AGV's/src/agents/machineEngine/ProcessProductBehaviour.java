@@ -33,18 +33,12 @@ public class ProcessProductBehaviour extends SimpleBehaviour {
 	@Override
 	public void action() {
 		Operation op = product.getCurrentOperation();
-//		System.out.println(myAgent.getLocalName() + ": operation: " + op
-//				+ "\nMachine: " + machine);
 		System.out.println(product + " " + op + " " + machine.isOperationAvailable(op));
 		while (op != null && machine.isOperationAvailable(op)) {
-			System.out.println(myAgent.getLocalName() + ": processing operation " + op.getOperationName() + " from product " + product.getProductName());
+			System.out.println(myAgent.getLocalName() + ": Processing product (" + product.getProductName() + ") operation = " + op.getOperationName() + " time = " + op.getOperationDuration() + "s");
 			myAgent.doWait(op.getOperationDuration()*1000);
 			op = product.nextOperation();
-//			System.out.println(myAgent.getLocalName()
-//					+ ": Processing Product (" + op.getOperationDuration()
-//					* 1000 + ")");
-			 
-
+			//TODO changes at piece
 		}
 		finnished = true;
 

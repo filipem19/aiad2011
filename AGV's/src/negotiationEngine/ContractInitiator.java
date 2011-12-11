@@ -14,14 +14,13 @@ public class ContractInitiator extends ContractNetInitiator {
 
 	private static final long serialVersionUID = 4913533665490479921L;
 
-	public ContractInitiator(Agent a, ACLMessage cfp) {
-		super(a, cfp);
-		myAgent.doWait(cfp.getReplyByDate().getTime()
-				- System.currentTimeMillis());
-	}
-
 	private HashMap<Cfp, ACLMessage> machineResponse = new HashMap<Cfp, ACLMessage>(),
 			agvResponse = new HashMap<Cfp, ACLMessage>();
+	private Cfp minimal;
+
+	public ContractInitiator(Agent a, ACLMessage cfp) {
+		super(a, cfp);
+	}
 
 	@Override
 	protected void handlePropose(ACLMessage propose, Vector acceptances) {
@@ -32,6 +31,7 @@ public class ContractInitiator extends ContractNetInitiator {
 
 	@Override
 	protected void handleAllResponses(Vector responses, Vector acceptances) {
+		System.out.println(myAgent.getLocalName() + ": handle all proposes");
 		Enumeration e = responses.elements();
 		while (e.hasMoreElements()) {
 
@@ -62,23 +62,36 @@ public class ContractInitiator extends ContractNetInitiator {
 						e1.printStackTrace();
 					}
 				} else {
-
+					System.out
+							.println("-------------------------------------------------------"
+									+ msg);
 				}
 			}
 		}
 		evaluateProposals();
 	}
-	
+
+	@Override
+	protected void handleInform(ACLMessage inform) {
+		System.out.println(myAgent.getLocalName() + ": Inform from "
+				+ inform.getSender().getLocalName());
+	}
+
 	public boolean finnished() {
 		return true;
 	}
 
+	@Override
+	protected void handleFailure(ACLMessage failure) {
+		System.out.println("------------------------------------------------------failure");
+	}
+
 	protected void evaluateProposals() {
 
-		Cfp minimal = findMinimalSolution();
+		minimal = findMinimalSolution();
 
 		if (minimal != null) {
-			ACLMessage reply = agvResponse.remove(minimal);
+			ACLMessage reply = agvResponse.get(minimal);
 			reply = reply.createReply();
 			reply.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
 			try {
@@ -98,7 +111,8 @@ public class ContractInitiator extends ContractNetInitiator {
 				e.printStackTrace();
 
 			}
-			System.out.println(myAgent.getLocalName() + ": machine responses size = "
+			System.out.println(myAgent.getLocalName()
+					+ ": after remove machine responses size = "
 					+ machineResponse.size() + " agv responses size = "
 					+ agvResponse.size());
 		} else {
@@ -114,6 +128,7 @@ public class ContractInitiator extends ContractNetInitiator {
 				if (minimal == null
 						&& agv.getMachineCostMap()
 								.get(machine.getDestination()) != null) {
+					agv.setDestination(machine.getDestination());
 					minimal = agv;
 				} else if (agv.getMachineCostMap()
 						.get(machine.getDestination()) != null
@@ -121,6 +136,7 @@ public class ContractInitiator extends ContractNetInitiator {
 								.get(machine.getDestination()) < minimal
 								.getMachineCostMap().get(
 										machine.getDestination())) {
+					agv.setDestination(machine.getDestination());
 					minimal = agv;
 				}
 			}
@@ -131,13 +147,18 @@ public class ContractInitiator extends ContractNetInitiator {
 
 	private void rejectUnwantedProposes(Cfp minimal) throws IOException {
 		for (Cfp cfp : agvResponse.keySet()) {
-			System.out.println(myAgent.getLocalName() + ": agv " + cfp.getAgv().getLocalName());
-			ACLMessage reply = agvResponse.get(cfp);
-			reply = reply.createReply();
-			reply.setPerformative(ACLMessage.REJECT_PROPOSAL);
-			reply.setContentObject(cfp);
-			myAgent.send(reply);
+			if (cfp != minimal) {
+				ACLMessage reply = agvResponse.get(cfp);
+				reply = reply.createReply();
+				reply.setPerformative(ACLMessage.REJECT_PROPOSAL);
+				reply.setContentObject(cfp);
+				myAgent.send(reply);
+			}
 		}
+
+		ACLMessage tmp = agvResponse.get(minimal);
+		agvResponse = new HashMap<Cfp, ACLMessage>();
+		agvResponse.put(minimal, tmp);
 
 		for (Cfp cfp : machineResponse.keySet()) {
 			if (cfp.getDestination() != minimal.getDestination()) {
@@ -146,8 +167,13 @@ public class ContractInitiator extends ContractNetInitiator {
 				reply.setPerformative(ACLMessage.REJECT_PROPOSAL);
 				reply.setContentObject(cfp);
 				myAgent.send(reply);
+			} else {
+				tmp = machineResponse.get(cfp);
 			}
 		}
+		machineResponse = new HashMap<Cfp, ACLMessage>();
+		machineResponse.put(minimal, tmp);
+
 		System.out.println("agvResponse size = " + agvResponse.size());
 		System.out.println("machineResponse size = " + machineResponse.size());
 	}

@@ -1,9 +1,11 @@
 package systemManagement;
       
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.lang.acl.ACLMessage;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -61,7 +63,6 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 	JTextField nomeMaqText = new JTextField();
 	JTextField xMaqText = new JTextField();
 	JTextField yMaqText = new JTextField();
-//	JTextField OperacoesText = new JTextField();
 	JList operationList;
 	
 
@@ -244,6 +245,8 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 		constraint.weighty=200;
 		opcoes.add(remover,constraint);
 		
+		opcoes.add(addtestbutton(),constraint);
+		
 		//Janela Principal
 		JSplitPane janela = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, mapaOficina, opcoes);
 		Dimension minimumSize = new Dimension(WINDOW_X_POS / 3, WINDOW_Y_POS / 4);
@@ -255,6 +258,13 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 		c.add(janela);
 	    		
 		//---   ---
+	}
+
+	private Component addtestbutton() {
+		JButton sendmessage = new JButton("m10 p1");
+		sendmessage.addActionListener(this);
+		sendmessage.setActionCommand("teste");
+		return sendmessage;
 	}
 
 	private JList createList(HashMap<String, Operation> existingOperations) {
@@ -331,7 +341,12 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 			xMaqText.setText("");
 			yMaqText.setText("");
 						
-		} 
+		} else if ("teste".equals(e.getActionCommand())) {
+			ACLMessage msg = new ACLMessage(ACLMessage.INFORM_IF);
+			msg.setContent("m10 p1");
+			msg.addReceiver(sysManager.getAID());
+			sysManager.send(msg);
+		}
 		this.repaint();
 	}
 }
