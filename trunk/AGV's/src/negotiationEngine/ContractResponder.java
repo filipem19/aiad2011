@@ -87,7 +87,7 @@ public class ContractResponder extends ContractNetResponder {
 	private ACLMessage getMachineMessageContent(ACLMessage reply,
 			Cfp content) throws RefuseException {
 		Machine machine = (Machine) myAgent;
-		if (machine.isOperationAvailable(content.getProduct()
+		if (content.getProduct().getCurrentOperation() != null && machine.isOperationAvailable(content.getProduct()
 				.getCurrentOperation())) {
 			content.setDestination(myAgent.getAID());
 			content.setType(ObjectType.Machine);

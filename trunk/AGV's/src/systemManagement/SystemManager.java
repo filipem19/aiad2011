@@ -49,10 +49,9 @@ public class SystemManager extends GuiAgent {
 
 	@Override
 	protected void setup() {
-		loadProgramData("ProgramData");
-		
-		sendMachineMap();
 		myGui = new SystemManagerGUI(this);
+		loadProgramData("ProgramData");
+		sendMachineMap();
 		initializeSystemManager();
 	}
 
@@ -81,7 +80,7 @@ public class SystemManager extends GuiAgent {
 			machineMapMessage.addReceiver(agv.getName());
 		}
 
-		
+		myGui.getFacilityMap().changeMachineLoc(machineMap);
 		send(machineMapMessage);
 	}
 
@@ -125,17 +124,6 @@ public class SystemManager extends GuiAgent {
 									.println("ERROR - adding product to msg content");
 							e.printStackTrace();
 						}
-
-//						try {
-//							System.out.println(getLocalName()
-//									+ ": teste sending message: "
-//									+ msgtomachine + " message contentObject: "
-//									+ msgtomachine.getContentObject());
-//						} catch (UnreadableException e) {
-//							// TODO Auto-generated catch block
-//							e.printStackTrace();
-//						}
-
 						send(msgtomachine);
 					}
 				}
@@ -253,6 +241,8 @@ public class SystemManager extends GuiAgent {
 				AgentController ac = getContainerController().createNewAgent(
 						agvName, "agents.agvEngine.AGV", args);
 				ac.start();
+				AID tmpAid = new AID(agvName, AID.ISLOCALNAME);
+				myGui.getFacilityMap().addAgvToMap(tmpAid, new Location(locationX, locationY));
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

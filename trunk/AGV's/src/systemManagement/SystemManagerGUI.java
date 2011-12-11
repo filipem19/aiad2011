@@ -86,32 +86,7 @@ public class SystemManagerGUI extends JFrame implements ActionListener{
 		
 		//---Pagina Principal---
 		
-		// Simulação de lista de localizações de AGVs e de Máquinas.
-		int[][] AgvLoc = new int[10][2];
-		int[][] MachineLoc = new int[10][2];
-		
-		AgvLoc[0][0] = 10;
-		AgvLoc[0][1] = 10;
-		AgvLoc[1][0] = 70;
-		AgvLoc[1][1] = 90;
-		AgvLoc[2][0] = 60;
-		AgvLoc[2][1] = 40;
-		AgvLoc[3][0] = 15;
-		AgvLoc[3][1] = 50;
-		AgvLoc[4][0] = 25;
-		AgvLoc[4][1] = 100;
-		
-		MachineLoc[0][0] = 25;
-		MachineLoc[0][1] = 25;
-		MachineLoc[1][0] = 35;
-		MachineLoc[1][1] = 90;
-		MachineLoc[2][0] = 60;
-		MachineLoc[2][1] = 60;
-		MachineLoc[3][0] = 85;
-		MachineLoc[3][1] = 80;
-		MachineLoc[4][0] = 100;
-		MachineLoc[4][1] = 100;
-		
+	
 		//Mapa Oficina
 		
 		facilityMap.setBackground(Color.ORANGE);

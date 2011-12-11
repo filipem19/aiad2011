@@ -33,7 +33,9 @@ public class AgvTransport extends SimpleBehaviour{
 //		myAgent.doWait(timeToWait*1000);
 		//TODO get Product from Machine
 		removeProductAtOriginMachine();
-
+		location.setX(10);
+		location.setY(10);
+		
 		myAgv.setLocation(location);
 		location = myAgv.getMachineLocation(cfp.getDestination().getName());
 		timeToWait = ((int)myAgv.getLocation().distanceTo(location)/myAgv.getVelocity());
@@ -51,7 +53,7 @@ public class AgvTransport extends SimpleBehaviour{
 
 	private void setProductAtDestinationMachine() {
 		ACLMessage msg = new ACLMessage(ACLMessage.INFORM_IF);
-		msg.addReceiver(cfp.getOrigin());
+		msg.addReceiver(cfp.getDestination());
 		try {
 			msg.setContentObject(cfp.getProduct());
 			myAgent.send(msg);
