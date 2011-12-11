@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.Date;
 
 import negotiationEngine.Cfp;
-import negotiationEngine.MachineContractInitiator;
+import negotiationEngine.ContractInitiator;
 import products.Operation;
 import products.Product;
 
@@ -28,7 +28,6 @@ public class ProcessProductBehaviour extends SimpleBehaviour {
 		super(machine);
 		this.product = product;
 		this.machine = machine;
-		action();
 	}
 
 	@Override
@@ -36,18 +35,20 @@ public class ProcessProductBehaviour extends SimpleBehaviour {
 		Operation op = product.getCurrentOperation();
 //		System.out.println(myAgent.getLocalName() + ": operation: " + op
 //				+ "\nMachine: " + machine);
+		System.out.println(product + " " + op + " " + machine.isOperationAvailable(op));
 		while (op != null && machine.isOperationAvailable(op)) {
-			block(op.getOperationDuration());
+			System.out.println(myAgent.getLocalName() + ": processing operation " + op.getOperationName() + " from product " + product.getProductName());
+			myAgent.doWait(op.getOperationDuration()*1000);
 			op = product.nextOperation();
 //			System.out.println(myAgent.getLocalName()
 //					+ ": Processing Product (" + op.getOperationDuration()
 //					* 1000 + ")");
-			block(op.getOperationDuration() * 1000);
+			 
+
 		}
 		finnished = true;
 
 		// M2MCFP
-
 		
 		DFAgentDescription[] agvs = machine
 				.getAgentListWithService("Transport"), machines = machine.getAgentListWithService("ProcessProduct");
@@ -69,8 +70,9 @@ public class ProcessProductBehaviour extends SimpleBehaviour {
 		
 		cfp.removeReceiver(myAgent.getAID());
 		
-//		cfp.setReplyByDate(new Date(System.currentTimeMillis() + 7000));
-		myAgent.addBehaviour(new MachineContractInitiator(myAgent, cfp));
+		cfp.setReplyByDate(new Date(System.currentTimeMillis() + 2000));
+		System.out.println("ADD BEHAVIOUR " + op);
+		myAgent.addBehaviour(new ContractInitiator(myAgent, cfp));
 		
 	}
 

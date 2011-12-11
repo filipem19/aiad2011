@@ -13,7 +13,7 @@ import jade.wrapper.ControllerException;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import negotiationEngine.MachineContractResponder;
+import negotiationEngine.ContractResponder;
 import products.Operation;
 import products.Product;
 
@@ -50,6 +50,7 @@ public class Machine extends Agent {
 	}
 
 	protected void shutdownAgent() {
+		
 		this.doDelete();
 	}
 
@@ -105,7 +106,7 @@ public class Machine extends Agent {
 				.and(MessageTemplate
 						.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
 						MessageTemplate.MatchPerformative(ACLMessage.CFP));
-		addBehaviour(new MachineContractResponder(this, template));
+		addBehaviour(new ContractResponder(this, template));
 	}
 
 	/**
