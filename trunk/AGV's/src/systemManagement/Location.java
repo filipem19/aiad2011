@@ -40,4 +40,8 @@ public class Location implements Serializable{
 		return Math.sqrt(Math.pow((destination.getX() - origin.getX()),2) + Math.pow(destination.getY() - origin.getY(),2));
 	}
 	
+	@Override
+	public String toString() {
+		return "x = " + getX() + " y = " + getY(); 
+	}
 }

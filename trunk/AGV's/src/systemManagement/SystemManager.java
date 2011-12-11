@@ -10,6 +10,7 @@ import jade.gui.GuiAgent;
 import jade.gui.GuiEvent;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import jade.lang.acl.UnreadableException;
 import jade.wrapper.AgentController;
 import jade.wrapper.StaleProxyException;
 
@@ -18,6 +19,7 @@ import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Vector;
@@ -42,8 +44,6 @@ public class SystemManager extends GuiAgent {
 	private HashMap<String, Operation> existingOperations = new HashMap<String, Operation>();
 	private HashMap<String, Product> existingProducts = new HashMap<String, Product>();
 	private HashMap<String, Location> machineMap = new HashMap<String, Location>();
-	
-
 
 	transient protected SystemManagerGUI myGui; // The gui
 
@@ -53,19 +53,18 @@ public class SystemManager extends GuiAgent {
 		loadProgramData("ProgramData");
 		sendMachineMap();
 		initializeSystemManager();
+		addBehaviour(new SystemManagerInformIfHandler(this));
 	}
 
 	private void initializeSystemManager() {
 		// TODO Auto-generated method stub
 		registerAgentAtDF("SystemManagement", "SystemManagement");
-		testFunctions();
-		
 	}
 
-	public void sendAgvLocation(AID agvAid, Location location){
+	public void sendAgvLocation(AID agvAid, Location location) {
 		myGui.getFacilityMap().changeAGVLoc(agvAid, location);
 	}
-	
+
 	private void sendMachineMap() {
 		ACLMessage machineMapMessage = new ACLMessage(ACLMessage.INFORM_REF);
 
@@ -84,53 +83,7 @@ public class SystemManager extends GuiAgent {
 		send(machineMapMessage);
 	}
 
-	private void testFunctions() {
-		// Comportamento para adicionar por um produto numa maquina
-		addBehaviour(new CyclicBehaviour(this) {
-
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = -1232462488859989835L;
-
-			@Override
-			public void action() {
-				ACLMessage msg = receive(MessageTemplate
-						.MatchPerformative(ACLMessage.INFORM_IF));
-				if (msg != null) {
-					// mensagem com nome do agente a receber o produto e o
-					// produto
-					System.out.println(getLocalName() + ": content: "
-							+ msg.getContent());
-					String[] parts = msg.getContent().split(" ");
-					if (parts.length == 2) {
-						DFAgentDescription[] agents = getAgentListWithService("ProcessProduct");
-
-						ACLMessage msgtomachine = new ACLMessage(
-								ACLMessage.INFORM_IF);
-
-						for (DFAgentDescription agent : agents) {
-							if (agent.getName().getLocalName()
-									.compareTo(parts[0]) == 0) {
-								msgtomachine.addReceiver(agent.getName());
-							}
-						}
-						try {
-							Product p = existingProducts.get(parts[1]);
-							msgtomachine.setContentObject(p);
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							System.err
-									.println("ERROR - adding product to msg content");
-							e.printStackTrace();
-						}
-						send(msgtomachine);
-					}
-				}
-				block();
-			}
-		});
-	}
+	
 
 	/**
 	 * Load data from file and creates instances of objects specified in this
@@ -242,7 +195,8 @@ public class SystemManager extends GuiAgent {
 						agvName, "agents.agvEngine.AGV", args);
 				ac.start();
 				AID tmpAid = new AID(agvName, AID.ISLOCALNAME);
-				myGui.getFacilityMap().addAgvToMap(tmpAid, new Location(locationX, locationY));
+				myGui.getFacilityMap().addAgvToMap(tmpAid,
+						new Location(locationX, locationY));
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -368,9 +322,7 @@ public class SystemManager extends GuiAgent {
 
 		return agents;
 	}
-	
-	
-	
+
 	/**
 	 * 
 	 * @param agvName
@@ -444,7 +396,7 @@ public class SystemManager extends GuiAgent {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	protected void onGuiEvent(GuiEvent arg0) {
 		// TODO Auto-generated method stub

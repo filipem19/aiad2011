@@ -210,82 +210,9 @@ public class AGV extends Agent {
 		}
 	}
 	
-
-	public void setLocation(Location locationFim) {
-		
-		// Obter posição da machine de destino
-		int destX = locationFim.getX(); //machineLocation;
-		int destY = locationFim.getY(); //machineLocation;
-		
-		// Posição de inicio do AGV.
-		double locX, locY;
-		locX = location.getX();
-		locY = location.getY();
-		
-		System.out.println(getLocalName()+ ": vou passear para " + location.getX() + " y= " + location.getY());
-		
-		double stepSize = Math.sqrt(Math.pow(Math.abs(locX - destX), 2) + Math.pow(Math.abs(locY - destY), 2))/ velocity;
-		while(locY != destY) {		
-			if(locX != destX) {
-				if(locX < destX) { // Direção positiva do X.
-					if(Math.abs(locX - destX) < stepSize) { // Podemos dar o passo inteiro.
-						locX += stepSize;
-					}
-					else { // Não podemos dar passo inteiro
-						if (locY < destY) {	// Dar o resto do passo no Y. NOTA: Tem de ser antes de mudar o locX.
-							locY += stepSize - (locX - destX);	// Y no sentido positivo.
-						}
-						else {
-							locY -= stepSize - (locX - destX);	// Y no sentido negativo.
-						}
-						locX = destX;	// Colocar o X no destino
-					}
-				}
-				else {	// Direção negativa do X.
-					if(Math.abs(locX - destX) < stepSize) { // Podemos dar o passo inteiro.
-						locX -= stepSize;
-					}
-					else { // Não podemos dar passo inteiro.
-						if (locY < destY) {	// Dar o resto do passo no Y. NOTA: Tem de ser antes de mudar o locX.
-							locY += stepSize - (locX - destX);	// Y no sentido positivo.
-						}
-						else {
-							locY -= stepSize - (locX - destX);	// Y no sentido negativo.
-						}
-						locX = destX;	// Colocar o X no destino
-					}
-				}
-				this.location.setX((int)locX);
-				this.location.setY((int)locY);
-			}
-			else{	// Já percorremos todo X, vamos percorrer Y.
-				if(locY < destY) { // Direção positiva do Y.
-					if(Math.abs(locY - destY) < stepSize) { // Podemos dar o passo inteiro.
-						locY += stepSize;
-					}
-					else { // Não podemos dar passo inteiro
-						locY = destY;	// Colocar o Y no destino
-					}
-				}
-				else {	// Direção negativa do Y.
-					if(Math.abs(locY - destY) < stepSize) { // Podemos dar o passo inteiro.
-						locY -= stepSize;
-					}
-					else { // Não podemos dar passo inteiro.
-						locY = destY;	// Colocar o Y no destino	
-					}
-				}
-				this.location.setY((int)locY);
-			}		
-			try {
-				// Avisar que o mapa de que se moveu.
-				informLocation(location);
-				Thread.sleep(50);	// Aguardar 500 milissegundos para simular movimento real.
-				
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}	
-		}	// Fim do while
+	public void setLocation(Location location) {
+		this.location = location;
+		informLocation(location);
 	}
 
 	@Override
