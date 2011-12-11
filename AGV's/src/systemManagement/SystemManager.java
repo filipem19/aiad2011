@@ -53,9 +53,20 @@ public class SystemManager extends GuiAgent {
 		
 		sendMachineMap();
 		myGui = new SystemManagerGUI(this);
-		testFunctions();
+		initializeSystemManager();
 	}
 
+	private void initializeSystemManager() {
+		// TODO Auto-generated method stub
+		registerAgentAtDF("SystemManagement", "SystemManagement");
+		testFunctions();
+		
+	}
+
+	public void sendAgvLocation(AID agvAid, Location location){
+		myGui.getFacilityMap().changeAGVLoc(agvAid, location);
+	}
+	
 	private void sendMachineMap() {
 		ACLMessage machineMapMessage = new ACLMessage(ACLMessage.INFORM_REF);
 
@@ -370,20 +381,6 @@ public class SystemManager extends GuiAgent {
 	
 	
 	
-	// TODO Usar mensagem que permita um retorno do agente. Percorrer todos os agentes.
-	
-	public void askLocation(String agentName) {
-		Location loc = null;
-		AID aID = new AID(agentName, AID.ISLOCALNAME);
-		ACLMessage msg = new ACLMessage(ACLMessage.INFORM_IF);
-		msg.setContent("LOC");
-		msg.addReceiver(aID);
-		send(msg);
-		
-		
-	}
-	
-
 	/**
 	 * 
 	 * @param agvName
@@ -443,6 +440,21 @@ public class SystemManager extends GuiAgent {
 		return existingProducts;
 	}
 
+	private void registerAgentAtDF(String serviceName, String serviceType) {
+		DFAgentDescription dfd = new DFAgentDescription();
+		dfd.setName(getAID());
+		ServiceDescription service = new ServiceDescription();
+		service.setName(serviceName);
+		service.setType(serviceType);
+		dfd.addServices(service);
+		try {
+			DFService.register(this, dfd);
+		} catch (FIPAException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	@Override
 	protected void onGuiEvent(GuiEvent arg0) {
 		// TODO Auto-generated method stub
