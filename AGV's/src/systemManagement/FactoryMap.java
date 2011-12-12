@@ -11,8 +11,8 @@ public class FactoryMap extends JPanel {
 
 	private int agvSize = 10;
 	private int machineSize = 20;
-	private static int MAX_X = 10;
-	private static int MAX_Y = 10;
+	private static int MAX_X = 100;
+	private static int MAX_Y = 100;
 
 	public HashMap<AID, Location> AgvsLocs = new HashMap<AID, Location>();
 	private HashMap<AID, Location> MachinesLocs = new HashMap<AID, Location>();
