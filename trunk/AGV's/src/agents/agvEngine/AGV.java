@@ -22,6 +22,8 @@ public class AGV extends Agent {
 	 * 
 	 */
 	private static final long serialVersionUID = 883196735452338183L;
+	
+	private static final int STEP_DURATION = 100;
 
 	private int autonomy;
 	private int cost;
@@ -210,9 +212,55 @@ public class AGV extends Agent {
 		}
 	}
 	
-	public void setLocation(Location location) {
-		this.location = location;
-		informLocation(location);
+	public void setLocation(Location finalLocation) {
+		// Estas duas linhas fazem o movimento direto sem waits, utéis para testes rápidos de outras partes do código. 
+//		this.location = location;
+//		informLocation(location);
+		
+        // Obter posição da machine de destino.
+        int destX = finalLocation.getX();
+        int destY = finalLocation.getY();
+        // Posição de inicio do AGV.
+        double locX, locY;
+        locX = location.getX();
+        locY = location.getY();
+        // Distância a percorrer em cada unidade de tempo mediante a velocidade do AGV, arredondada a um inteiro.
+        int stepSize = (int)Math.sqrt(Math.pow(Math.abs(locX - destX), 2) + Math.pow(Math.abs(locY - destY), 2))/ velocity;
+        // Sentido do movimento do AGV.
+        int directionX = (destX - locX < 0) ? -1:1;   
+        int directionY = (destY - locY < 0) ? -1:1; 
+        
+        // Mover em X.      
+        while(destX != locX) {
+        	locX += stepSize * directionX;	// Mover com o sentido e velocidade corretos.
+        	double difX = (destX - locX) * directionX;
+        	if(difX < 0) {	// Confirmar se passámos pelo destino e corrigir a posição.
+        		locX = destX;			
+        		locY -= difX * directionY;
+            	location.setY((int)locY);	// Alterar a posição de Y no AGV.
+        	}
+        	location.setX((int)locX);	// Alterar a posição de X no AGV.
+        	informLocation(location);	// Informar o System Manager da nova posição para que a GUI tenha dados actuais.
+        	try {	// Aguardar algum tempo entre cada 'passo'.
+				Thread.sleep(STEP_DURATION);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+        }
+        // Mover em Y de forma similar ao movimento em X.
+        while(destY != locY) {
+        	locY += stepSize * directionY;
+        	if((destY - locY) * directionY < 0) {
+        		locY = destY;
+        	}
+        	location.setY((int)locY);
+        	informLocation(location); 
+        	try {
+				Thread.sleep(STEP_DURATION);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+        }
 	}
 
 	@Override
