@@ -34,6 +34,8 @@ public class AGV extends Agent {
 	private double maxLoad;
 	private String status, agvName;
 
+	private AgvTransport transportBehaviour;
+	
 	private HashMap<String, Location> machineLocation = new HashMap<String, Location>();
 
 	public void setAgvProperties(int autonomy, int cost, int locationX,
@@ -55,7 +57,7 @@ public class AGV extends Agent {
 		Object[] args = getArguments();
 
 		if (args.length < 8) {
-			System.out.println("takedown agent: " + getAgvName());
+//			System.out.println("takedown agent: " + getAgvName());
 			this.takeDown();
 		} else {
 			setAgvProperties((Integer) args[0], (Integer) args[1],
@@ -300,6 +302,14 @@ public class AGV extends Agent {
 //		for(String s: machineLocation.keySet())
 //			System.out.println("machineLocation for = " + s + " machinelocalname = " + machineLocalName);
 		return machineLocation.get(machineLocalName);
+	}
+
+	public AgvTransport getTransportBehaviour() {
+		return transportBehaviour;
+	}
+
+	public void setTransportBehaviour(AgvTransport transportBehaviour) {
+		this.transportBehaviour = transportBehaviour;
 	}
 	
 	

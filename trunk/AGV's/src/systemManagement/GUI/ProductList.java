@@ -1,4 +1,4 @@
-package systemManagement;
+package systemManagement.GUI;
 
 import java.util.HashMap;
 
@@ -6,13 +6,14 @@ import javax.swing.ListModel;
 import javax.swing.event.ListDataListener;
 
 import products.Operation;
+import products.Product;
 
-public class OperationList implements ListModel{
+public class ProductList implements ListModel{
 
-	private HashMap<String, Operation> availableOperations;
+	private HashMap<String, Product> availableProducts;
 
-	public OperationList(HashMap<String, Operation> availableOperations) {
-		this.availableOperations = availableOperations; 
+	public ProductList(HashMap<String, Product> availableOperations) {
+		this.availableProducts = availableOperations; 
 	}
 	
 	@Override
@@ -22,13 +23,13 @@ public class OperationList implements ListModel{
 	}
 
 	@Override
-	public Operation getElementAt(int index) {
-		return (Operation) availableOperations.values().toArray()[index];
+	public Product getElementAt(int index) {
+		return (Product) availableProducts.values().toArray()[index];
 	}
 
 	@Override
 	public int getSize() {
-		return availableOperations.size();
+		return availableProducts.size();
 	}
 
 	@Override

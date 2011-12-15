@@ -24,18 +24,19 @@ public class MachineInformIfMessageHandler extends CyclicBehaviour {
 		if (msg != null) {
 //			System.out.println(myAgent.getLocalName() + ": msg > " + msg
 //					+ " -> class = " + myAgent.getClass());
+//			System.out.println(myAgent.getLocalName() + ": message content = " + msg.getContent());
 			if (msg.getContent() != null && msg.getContent().compareTo("TAKE_DOWN") == 0) {
-				System.out.println(myAgent.getLocalName() + "message (" + msg.getConversationId() + "): "
-						+ msg.getContent());
+//				System.out.println(myAgent.getLocalName() + "message (" + msg.getConversationId() + "): "
+//						+ msg.getContent());
 				((Machine) myAgent).shutdownAgent();
-				System.out.print("vou-me desligar " + myAgent.getName() + "\n");
+//				System.out.print("vou-me desligar " + myAgent.getName() + "\n");
 			} else {
 				Product p = null;
 				try {
-					System.out.println(myAgent.getLocalName() + ": contenttype " + msg.getContentObject()); 
+//					System.out.println(myAgent.getLocalName() + ": contenttype " + msg.getContentObject()); 
 					p = (Product) msg.getContentObject();
-					System.out.println(myAgent.getLocalName()
-							+ ": messageObjectContent() = " + p);
+//					System.out.println(myAgent.getLocalName()
+//							+ ": messageObjectContent() = " + p);
 				} catch (UnreadableException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

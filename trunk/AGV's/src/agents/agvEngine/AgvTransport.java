@@ -30,9 +30,12 @@ public class AgvTransport extends SimpleBehaviour{
 		int timeToWait = (int) (myAgv.getLocation().distanceTo(location)/(myAgv.getVelocity()/10));
 		
 		//TRAVEL time to cfp origin
-		System.out.println("w8 = " + timeToWait*110);
-		myAgent.doWait(Math.abs(timeToWait*110));
-		System.out.println("origin location " + location);
+		
+		if(timeToWait != 0){
+//			System.out.println("w8 = " + timeToWait*110);
+			myAgent.doWait(Math.abs(timeToWait*110));
+		}
+//		System.out.println("origin location " + location);
 		myAgv.setLocation(location);
 		removeProductAtOriginMachine();
 		
@@ -41,12 +44,14 @@ public class AgvTransport extends SimpleBehaviour{
 
 		//TRAVEL time to cfp destination
 		//set location destination
-
-		System.out.println("w8 = " + timeToWait*110);
-		myAgent.doWait(Math.abs(timeToWait*110));
+		if(timeToWait != 0){
+//			System.out.println("w8 = " + timeToWait*110);
+			myAgent.doWait(Math.abs(timeToWait*110));
+		}
 		System.out.println("destination location " + location);
 		myAgv.setLocation(location);
 		setProductAtDestinationMachine();
+		myAgv.setTransportBehaviour(null);
 		myAgent.removeBehaviour(this);
 
 	}

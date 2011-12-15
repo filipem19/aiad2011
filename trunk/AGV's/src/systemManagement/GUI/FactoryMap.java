@@ -1,9 +1,12 @@
-package systemManagement;
+package systemManagement.GUI;
 
 import jade.core.AID;
 
 import java.awt.*;
 import javax.swing.JPanel;
+
+import systemManagement.Location;
+
 import java.util.HashMap;
 
 public class FactoryMap extends JPanel {
@@ -38,7 +41,7 @@ public class FactoryMap extends JPanel {
 	}
 
 	public void changeMachineLoc(HashMap<String, Location> machineMap) {
-		System.out.print("Vou carregar as máquinas.\n");
+//		System.out.print("Vou carregar as máquinas.\n");
 		for (String aid : machineMap.keySet()) {
 			AID machineAID = new AID(aid, AID.ISLOCALNAME);
 			MachinesLocs.put(machineAID, machineMap.get(aid));
@@ -78,7 +81,7 @@ public class FactoryMap extends JPanel {
 		// System.out.print("Vou imprimir.\n");
 		if (AgvsLocs == null)
 			return;
-		System.out.print(AgvsLocs.size() + "\n");
+//		System.out.print(AgvsLocs.size() + "\n");
 		for (AID chave : AgvsLocs.keySet()) {
 			locX = AgvsLocs.get(chave).getX() * this.getWidth() / MAX_X;
 			locY = AgvsLocs.get(chave).getY() * this.getWidth() / MAX_Y;
@@ -86,7 +89,7 @@ public class FactoryMap extends JPanel {
 			g.setColor(Color.MAGENTA);
 			drawAgv(g, locX, locY, agvSize);
 			g.setColor(Color.BLACK);
-			g.drawString(chave.getName().split("@")[0], locX, locY);
+			g.drawString(chave.getName().split("@")[0], locX, locY + agvSize);
 		}
 	}
 }

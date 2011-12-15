@@ -70,18 +70,23 @@ public class ContractResponder extends ContractNetResponder {
 			e.printStackTrace();
 		}
 		
-		System.out.println(myAgent.getLocalName() + ": proposta aceite:" + propose.getConversationId() + " content = " + content.getOrigin().getLocalName() + " " + content.getDestination().getLocalName() + " " + content.getAgv().getLocalName()); 
+//		System.out.println(myAgent.getLocalName() + ": proposta aceite:" + propose.getConversationId() + " content = " + content.getOrigin().getLocalName() + " " + content.getDestination().getLocalName() + " " + content.getAgv().getLocalName()); 
 		ACLMessage reply = accept.createReply();
 		reply.setPerformative(ACLMessage.INFORM);
-		if(myAgent.getClass() == AGV.class)
-			myAgent.addBehaviour(new AgvTransport((AGV) myAgent, content));
+		if(myAgent.getClass() == AGV.class){
+			AGV a = (AGV) myAgent;
+			AgvTransport t = new AgvTransport((AGV) myAgent, content);
+			a.setTransportBehaviour(t);
+			a.addBehaviour(new AgvTransport(a, content));
+		}
+			
 		return reply;
 	}
 
 	@Override
 	protected void handleRejectProposal(ACLMessage cfp, ACLMessage propose,
 			ACLMessage reject) {
-		System.out.println(myAgent.getLocalName() + ": propose was rejected");
+//		System.out.println(myAgent.getLocalName() + ": propose was rejected");
 	}
 	
 	private ACLMessage getMachineMessageContent(ACLMessage reply,
@@ -108,7 +113,11 @@ public class ContractResponder extends ContractNetResponder {
 	private ACLMessage getAgvResponseMessage(ACLMessage reply,
 			Cfp content, AGV agent) {
 		try {
-			reply.setContentObject(calculateCosts(content, agent));
+			if(((AGV)myAgent).getTransportBehaviour() == null){
+				reply.setContentObject(calculateCosts(content, agent));
+			}
+			else 
+				reply.setPerformative(ACLMessage.REFUSE);
 		} catch (IOException e) {
 			System.err.println(myAgent.getLocalName()
 					+ "ERROR: setting reply message content");

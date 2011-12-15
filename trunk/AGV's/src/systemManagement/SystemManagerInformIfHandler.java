@@ -34,7 +34,7 @@ public class SystemManagerInformIfHandler extends CyclicBehaviour {
 				content = msg.getContentObject();
 			} catch (UnreadableException e1) {
 				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				// e1.printStackTrace();
 			}
 
 			if (content != null) {
@@ -52,38 +52,43 @@ public class SystemManagerInformIfHandler extends CyclicBehaviour {
 			} else if (content == null) {
 				// mensagem com nome do agente a receber o produto e o
 				// produto
-				System.out.println(myAgent.getLocalName() + ": content: "
-						+ msg.getContent());
+//				System.out.println(myAgent.getLocalName() + ": content: "
+//						+ msg.getContent());
 				String[] parts = msg.getContent().split(" ");
-				if (parts.length == 2) {
-					DFAgentDescription[] agents = mySysManager
-							.getAgentListWithService("ProcessProduct");
-
-					ACLMessage msgtomachine = new ACLMessage(
-							ACLMessage.INFORM_IF);
-
-					for (DFAgentDescription agent : agents) {
-						if (agent.getName().getLocalName().compareTo(parts[0]) == 0) {
-							msgtomachine.addReceiver(agent.getName());
-						}
-					}
-					try {
-						Product p = mySysManager.getExistingProducts().get(
-								parts[1]);
-						msgtomachine.setContentObject(p);
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						System.err
-								.println("ERROR - adding product to msg content");
-						e.printStackTrace();
-					}
-					myAgent.send(msgtomachine);
+				if(msg.getContent()!= null && parts[0].compareTo("RefreshMessage") == 0){
+					mySysManager.getControlGUI().setMessageFieldContent(msg.getContent().split("RefreshMessage")[1]);
+				}
+				else if (parts.length == 2) {
+					setMachineProduct(parts);
 				}
 
 			}
 
 		}
 		block();
+	}
+
+	private void setMachineProduct(String[] parts) {
+		DFAgentDescription[] agents = mySysManager
+				.getAgentListWithService("ProcessProduct");
+
+		ACLMessage msgtomachine = new ACLMessage(ACLMessage.INFORM_IF);
+
+		for (DFAgentDescription agent : agents) {
+			if (agent.getName().getLocalName().compareTo(parts[0]) == 0) {
+				msgtomachine.addReceiver(agent.getName());
+			}
+		}
+		try {
+			Product p = mySysManager.getExistingProducts().get(parts[1]);
+			msgtomachine.setContentObject(p);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.err.println("ERROR - adding product to msg content");
+			e.printStackTrace();
+		}
+		myAgent.send(msgtomachine);
+
 	}
 
 }

@@ -31,7 +31,7 @@ public class ContractInitiator extends ContractNetInitiator {
 
 	@Override
 	protected void handleAllResponses(Vector responses, Vector acceptances) {
-		System.out.println(myAgent.getLocalName() + ": handle all proposes responses.size = " + responses.size() + " acceptances.size = " + acceptances.size());
+//		System.out.println(myAgent.getLocalName() + ": handle all proposes responses.size = " + responses.size() + " acceptances.size = " + acceptances.size());
 		Enumeration e = responses.elements();
 		while (e.hasMoreElements()) {
 
@@ -62,9 +62,9 @@ public class ContractInitiator extends ContractNetInitiator {
 						e1.printStackTrace();
 					}
 				} else {
-					System.out
-							.println("-------------------------------------------------------"
-									+ msg);
+//					System.out
+//							.println("-------------------------------------------------------"
+//									+ msg);
 				}
 			}
 		}
@@ -83,7 +83,7 @@ public class ContractInitiator extends ContractNetInitiator {
 
 	@Override
 	protected void handleFailure(ACLMessage failure) {
-		System.out.println("------------------------------------------------------failure");
+//		System.out.println("------------------------------------------------------failure");
 	}
 
 	protected void evaluateProposals() {
@@ -111,10 +111,10 @@ public class ContractInitiator extends ContractNetInitiator {
 				e.printStackTrace();
 
 			}
-			System.out.println(myAgent.getLocalName()
-					+ ": after remove machine responses size = "
-					+ machineResponse.size() + " agv responses size = "
-					+ agvResponse.size());
+//			System.out.println(myAgent.getLocalName()
+//					+ ": after remove machine responses size = "
+//					+ machineResponse.size() + " agv responses size = "
+//					+ agvResponse.size());
 		} else {
 			// TODO Handle no proposals available
 		}
@@ -174,8 +174,8 @@ public class ContractInitiator extends ContractNetInitiator {
 		machineResponse = new HashMap<Cfp, ACLMessage>();
 		machineResponse.put(minimal, tmp);
 
-		System.out.println("agvResponse size = " + agvResponse.size());
-		System.out.println("machineResponse size = " + machineResponse.size());
+//		System.out.println("agvResponse size = " + agvResponse.size());
+//		System.out.println("machineResponse size = " + machineResponse.size());
 	}
 
 }

@@ -39,7 +39,7 @@ public class Machine extends Agent {
 	protected void setup() {
 		Object[] args = getArguments();
 		if (args.length < 3) {
-			System.out.println("takedown");
+//			System.out.println("takedown");
 			takeDown();
 			return;
 		}
