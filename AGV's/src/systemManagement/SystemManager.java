@@ -26,6 +26,8 @@ import java.util.Vector;
 
 import products.Operation;
 import products.Product;
+import systemManagement.GUI.SystemManagerControlsGUI;
+import systemManagement.GUI.SystemManagerGUI;
 
 public class SystemManager extends GuiAgent {
 
@@ -46,14 +48,19 @@ public class SystemManager extends GuiAgent {
 	private HashMap<String, Location> machineMap = new HashMap<String, Location>();
 
 	transient protected SystemManagerGUI myGui; // The gui
+	transient protected SystemManagerControlsGUI controlGUI;
 
+	
 	@Override
 	protected void setup() {
 		myGui = new SystemManagerGUI(this);
 		loadProgramData("ProgramData");
+		
 		sendMachineMap();
 		initializeSystemManager();
 		addBehaviour(new SystemManagerInformIfHandler(this));
+		controlGUI = new SystemManagerControlsGUI(this);
+		
 	}
 
 	private void initializeSystemManager() {
@@ -202,7 +209,7 @@ public class SystemManager extends GuiAgent {
 				e.printStackTrace();
 			}
 		} else {
-			System.out.println("agv not created");
+			System.err.println("agv not created");
 		}
 	}
 
@@ -279,7 +286,7 @@ public class SystemManager extends GuiAgent {
 				e.printStackTrace();
 			}
 		} else {
-			System.out.println("error creating machine - bad parameters");
+			System.err.println("error creating machine - bad parameters");
 		}
 	}
 
@@ -380,6 +387,10 @@ public class SystemManager extends GuiAgent {
 
 	public HashMap<String, Product> getExistingProducts() {
 		return existingProducts;
+	}
+
+	public SystemManagerControlsGUI getControlGUI() {
+		return controlGUI;
 	}
 
 	private void registerAgentAtDF(String serviceName, String serviceType) {

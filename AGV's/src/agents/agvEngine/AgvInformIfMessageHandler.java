@@ -25,7 +25,7 @@ public class AgvInformIfMessageHandler extends CyclicBehaviour{
 		if(msg != null){
 			if(msg.getContent().compareTo("TAKE_DOWN") == 0){
 				agv.shutdownAgent();
-				System.out.print("vou-me desligar " + myAgent.getName() + "\n");
+//				System.out.print("vou-me desligar " + myAgent.getName() + "\n");
 			}
 			else if (msg.getContent().compareTo("STATE") == 0) {
 				ACLMessage reply = msg.createReply();

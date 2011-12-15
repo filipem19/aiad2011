@@ -58,10 +58,15 @@ public class Product implements Serializable{
 		}
 	}
 	
+//	@Override
+//	public String toString() {
+//		return "Product(" + getProductName() + ":" +
+//				"\tcurrentWeight = " + currentWeight + 
+//				"\toperations = " + operations;
+//	}
+	
 	@Override
 	public String toString() {
-		return "Product(" + getProductName() + ":" +
-				"\tcurrentWeight = " + currentWeight + 
-				"\toperations = " + operations;
+		return getProductName();
 	}
 }

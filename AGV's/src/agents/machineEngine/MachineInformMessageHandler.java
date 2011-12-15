@@ -28,13 +28,13 @@ public class MachineInformMessageHandler extends CyclicBehaviour {
 //				System.out.println(myAgent.getLocalName() + "message (" + msg.getConversationId() + "): "
 //						+ msg.getContent());
 				((Machine) myAgent).shutdownAgent();
-				System.out.print("vou-me desligar " + myAgent.getName() + "\n");
+//				System.out.print("vou-me desligar " + myAgent.getName() + "\n");
 			} else {
 				Product p = null;
 				try {
 					p = (Product) msg.getContentObject();
-					System.out.println(myAgent.getLocalName()
-							+ ": messageObjectContent() = " + p);
+//					System.out.println(myAgent.getLocalName()
+//							+ ": messageObjectContent() = " + p);
 				} catch (UnreadableException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

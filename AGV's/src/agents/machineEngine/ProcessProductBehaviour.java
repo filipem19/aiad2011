@@ -33,7 +33,7 @@ public class ProcessProductBehaviour extends SimpleBehaviour {
 	@Override
 	public void action() {
 		Operation op = product.getCurrentOperation();
-		System.out.println(product + " " + op + " " + machine.isOperationAvailable(op));
+//		System.out.println(product + " " + op + " " + machine.isOperationAvailable(op));
 		while (op != null && machine.isOperationAvailable(op)) {
 			System.out.println(myAgent.getLocalName() + ": Processing product (" + product.getProductName() + ") operation = " + op.getOperationName() + " time = " + op.getOperationDuration() + "s");
 			myAgent.doWait(op.getOperationDuration()*1000);
@@ -42,6 +42,15 @@ public class ProcessProductBehaviour extends SimpleBehaviour {
 		}
 		finnished = true;
 
+		if(product.getCurrentOperation() == null){
+			ACLMessage msg = new ACLMessage(ACLMessage.INFORM_IF);
+			msg.setContent("RefreshMessage " + product.toString() + " Concluído");
+			msg.addReceiver(this.machine.getAgentListWithService("SystemManagement") [0].getName());
+			myAgent.send(msg);
+			myAgent.removeBehaviour(this);
+			return;
+		}
+		
 		// M2MCFP
 		
 		DFAgentDescription[] agvs = machine
@@ -65,7 +74,6 @@ public class ProcessProductBehaviour extends SimpleBehaviour {
 		cfp.removeReceiver(myAgent.getAID());
 		
 		cfp.setReplyByDate(new Date(System.currentTimeMillis() + 2000));
-		System.out.println("ADD BEHAVIOUR " + op);
 		myAgent.addBehaviour(new ContractInitiator(myAgent, cfp));
 		
 	}
